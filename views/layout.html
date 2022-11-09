@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DB연동프로그램</title>
+        <link rel="stylesheet" href="main.css">
+        <script src="https://kit.fontawesome.com/b85c4210bf.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header>
+            <a href="/"><img id="logo" src="logo.png" alt="도서구매"></a>
+            <a href="/addBook" class="btn">도서 등록</a>
+            <a href="/cart" class="cart-logo"><i id="shopping-bag-icon" class="fa-solid fa-cart-shopping"></i></a>
+        </header>
+        <nav>
+            <a href="/join" class="join">회원가입</a>
+            <form action="/search" class="search">
+                <input type="text" name="search" id="search" placeholder="도서 검색">
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass" id="search-icon"></i>
+                </button>
+            </form>
+            <div id="user-info">
+                {% if user %}
+                    <a href="/info" class="user">내 정보</a>
+                    <a href="/auth/logout" class="user">로그아웃</a>
+                {% else %}
+                    <a href="/login" class="user">로그인</a>
+                {% endif %}
+            </div>
+        </nav>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        {% block content %}
+        {% endblock %}
+        {% block script %}
+        {% endblock %}
+    </body>
+</html>

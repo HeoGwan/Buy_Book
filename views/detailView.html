@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="detail">
+        <div class="show-book-image">
+            {% if book.imageSource %}
+                <img class="detail-book-image" src="{{book.imageSource}}" alt="{{book.title}}">
+            {% else %}
+                <img class="detail-book-image" src="no_image.png" alt="{{book.title}}">
+            {% endif %}
+        </div>
+        <div class="show-book-info">
+            <div class="book-title">{{book.title}}</div>
+            <div class="book-price">
+                <span class="price">{{book.price}}</span> 원
+            </div>
+            <div class="book-info">
+                <br>
+                <div><b>책 소개</b></div>
+                <p class="book-info-content">{{book.info}}</p>
+            </div>
+        </div>
+        <div class="show-active">
+            <div class="show-can-order">
+                {% if canOrder %}
+                    <span class="can-order">판매 중</span>
+                {% else %}
+                    <span class="cant-order">수량 부족</span>
+                {% endif %}
+            </div>
+            <div class="show-quantity">
+                <button class="minus-btn" onclick="count('minus')">-</button>
+                <input type="number" value="1" name="quantity" class="book-quantity">
+                <button class="plus-btn" onclick="count('plus')">+</button>
+            </div>
+            <form action="/cart" method="post" class="go-cart">
+                <input type="hidden" value="{{book.number}}" name="bookNumber" class="book-number">
+                <input type="hidden" value="1" name="quantity" class="book-quantity-copy">
+                <button class="cart-btn">장바구니</button>
+            </form>
+            <form action="/order" method="post" class="go-order">
+                <input type="hidden" value="notCart" name="payType">
+                <input type="hidden" value="{{book.number}}" name="bookNumber" class="book-number">
+                <input type="hidden" value="1" name="quantity" class="book-quantity-copy">
+                <button class="buy-btn {{book.number}}">바로구매</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function count(type) {
+            const quantity = document.getElementsByClassName('book-quantity')[0];
+            
+            if (type === 'minus') {
+                quantity.value = parseInt(quantity.value) - 1;
+            } else if (type === 'plus') {
+                quantity.value = parseInt(quantity.value) + 1;
+            }
+
+            const quantity_copys = document.querySelectorAll('.book-quantity-copy');
+            quantity_copys.forEach(quantity_copy => {
+                quantity_copy.value = quantity.value;
+            })
+        }
+    </script>
+{% endblock %}

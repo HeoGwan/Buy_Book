@@ -1,0 +1,132 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="save">
+        {% if add == 'address' %}
+            <form action="/save/add/address" method="post">
+                <input type="hidden" value="form" name="from">
+                <div id="save-address">
+                    <div><b>배송지 정보</b></div>
+                    <div class="input-save-info">
+                            <span class="address-info">우편번호: <input type="text" pattern="[0-9]+" maxlength="5" name="zipCode" class="zip-code"> <br/></span>
+                            <span class="address-info">기본주소: <input type="text" name="basicAddress" class="basic-address"> <br/></span>
+                            <span class="address-info">상세주소: <input type="text" name="detailAddress" class="detail-address"> <br/></span>
+                    </div>
+                    <div class="save-btn">
+                        <button type="submit" class="s-btn">배송지 등록</button>
+                    </div>
+                </div>
+            </form>
+        {% elif add == 'creditCard' %}
+            <form action="/save/add/creditCard" method="post">
+                <input type="hidden" value="form" name="from">
+                <div id="save-creditCard">
+                    <div><b>신용카드 정보</b></div>
+                    <div class="input-save-info">
+                            카드번호: <input type="text" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> -
+                            <input type="text" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> -
+                            <input type="text" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> -
+                            <input type="text" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> <br/>
+                            유효기간: <input type="text" pattern="[0-9]+" maxlength="2" name="expirationDay" class="credit-card" placeholder="MM"> /
+                            <input type="text" pattern="[0-9]+" maxlength="2" name="expirationYear" class="credit-card" placeholder="yy"> <br/>
+                            카드종류: <select class="credit-card-type" name="creditCardType">
+                                        <option value="NH">농협</option>
+                                        <option value="WOORI">우리</option>
+                                        <option value="IBK">IBK</option>
+                                        <option value="BUSAN">부산</option>
+                                </select> <br/>
+                    </div>
+                    <div class="save-btn">
+                        <button type="submit" class="s-btn">신용카드 등록</button>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+
+        {% if addressInfo %}
+            <form action="/save/update/address" method="post">
+                <input type="hidden" value="form" name="from">
+                <div id="save-address">
+                    <div><b>배송지 정보</b></div>
+                    <div class="input-save-info">
+                            <span class="address-info">우편번호: <input type="text" value="{{addressInfo.zipCode}}" pattern="[0-9]+" maxlength="5" name="zipCode" class="zip-code"> <br/></span>
+                            <span class="address-info">기본주소: <input type="text" value="{{addressInfo.basicAddress}}" name="basicAddress" class="basic-address"> <br/></span>
+                            <span class="address-info">상세주소: <input type="text" value="{{addressInfo.detailAddress}}" name="detailAddress" class="detail-address"> <br/></span>
+                    </div>
+                    <div class="save-btn">
+                        <button type="submit" class="s-btn">배송지 수정</button>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+
+        {% if cardInfo %}
+            <form action="/save/update/creditCard" method="post">
+                <div id="save-creditCard">
+                    <div><b>신용카드 정보</b></div>
+                    <div class="input-save-info">
+                            카드번호: <input type="text" value="{{cardInfo.cardNumber1}}" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> -
+                            <input type="text" value="{{cardInfo.cardNumber2}}" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> -
+                            <input type="text" value="{{cardInfo.cardNumber3}}" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> -
+                            <input type="text" value="{{cardInfo.cardNumber4}}" pattern="[0-9]+" maxlength="4" name="cardNumber" class="credit-card"> <br/>
+                            유효기간: <input type="text" value="{{cardInfo.expirationDay}}" pattern="[0-9]+" maxlength="2" name="expirationDay" class="credit-card" placeholder="MM"> /
+                            <input type="text" value="{{cardInfo.expirationYear}}" pattern="[0-9]+" maxlength="2" name="expirationYear" class="credit-card" placeholder="yy"> <br/>
+                            카드종류: <select class="credit-card-type" name="creditCardType">
+                                    {% if cardInfo.cardType === 'NH' %}
+                                        <option value="NH" selected>농협</option>
+                                    {% else %}
+                                        <option value="NH">농협</option>
+                                    {% endif %}
+                                    
+                                    {% if cardInfo.cardType === 'WOORI' %}
+                                        <option value="WOORI" selected>우리</option>
+                                    {% else %}
+                                        <option value="WOORI">우리</option>
+                                    {% endif %}
+                                    
+                                    {% if cardInfo.cardType === 'IBK' %}
+                                        <option value="IBK" selected>IBK</option>
+                                    {% else %}
+                                        <option value="IBK">IBK</option>
+                                    {% endif %}
+                                    
+                                    {% if cardInfo.cardType === 'BUSAN' %}
+                                        <option value="BUSAN" selected>부산</option>
+                                    {% else %}
+                                        <option value="BUSAN">부산</option>
+                                    {% endif %}
+                                </select> <br/>
+                    </div>
+                    <div class="save-btn">
+                        <button type="submit" class="s-btn">신용카드 수정</button>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        const card_numbers = document.getElementsByName('cardNumber');
+		card_numbers.forEach((card_number, index) => {
+			card_number.addEventListener('keyup', function (e) {
+				// 번호 입력 시
+				if (48 <= e.keyCode && e.keyCode <= 57) {
+					if (this.value.length == 4) {
+						card_numbers[index + 1]?.focus();
+					}
+				}
+			})
+		});
+
+        document.getElementsByName('expirationDay')[0]?.addEventListener('keyup', function (e) {
+				// 번호 입력 시
+				if (48 <= e.keyCode && e.keyCode <= 57) {
+					if (this.value.length == 2) {
+						document.getElementsByName('expirationYear')[0]?.focus();
+					}
+				}
+			});
+    </script>
+{% endblock %}

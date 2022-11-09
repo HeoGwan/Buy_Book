@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <form id="add-book" action="/addbook" method="post" enctype="multipart/form-data">
+        <div class="add-book-header">도서 등록</div>
+        <div class="add-book-title">
+            도서 제목: <input type="text" name="title" placeholder="도서 제목을 입력하세요" autofocus>
+        </div>
+        <div class="add-book-info">
+            <div class="add-book-info-header">책 소개:</div>
+            <textarea name="info" id="book-info" cols="30" rows="10"></textarea>
+        </div>
+        <div class="add-book-stock">
+            재고량: <input type="number" name="stock" placeholder="재고량 입력">
+        </div>
+        <div class="add-book-price">
+            판매가: <input type="number" name="price" placeholder="판매가 입력">
+        </div>
+        <span class="add-book-image">
+            이미지: <input id="img" type="file" accept="image/*">
+        </span>
+        <div class="img-preview">
+            <img id="img-preview" src="" style="display: none;" width="250">
+            <input id="img-url" type="hidden" name="url">
+        </div>
+        <button class="btn" type="submit">등록</button>
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script>
+        if (document.getElementById('img')) {
+            document.getElementById('img').addEventListener('change', function (e) {
+                const formData = new FormData();
+                console.log(this, this.files);
+                formData.append('img', this.files[0]);
+                axios.post('/addBook/img', formData)
+                    .then(res => {
+                        document.getElementById('img-url').value = res.data.url;
+                        document.getElementById('img-preview').src = res.data.url;
+                        document.getElementById('img-preview').style.display =  'inline-block';
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            });
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,944 @@
+/* common */
+:root {
+    --margin-top-value: 1em;
+}
+
+body {
+    padding:  0;
+    margin:  0;
+    box-sizing: border-box;
+    width:  74%;
+    position: absolute;
+    padding: 0 1%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid grey;
+    padding-bottom: 10em;
+}
+
+header {
+    position: relative;
+    width:  100%;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+header .btn {
+    margin-left: var(--margin-top-value);
+}
+
+ul { margin: 0; padding: 0; }
+li { list-style-type: none; }
+button { cursor: pointer; }
+
+.show-can-order {
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: var(--margin-top-value);
+}
+
+.can-order {
+    font-size: 12pt;
+}
+
+.cant-order {
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+.btn {
+    border: 1px solid grey;
+    background-color: #e6e6e6;
+    padding: 5px;
+    border-radius: 5px;
+    color: black;
+    text-decoration: none;
+}
+
+.s-btn {
+    border: 1px solid black;
+    background: none;
+    padding: .6em 1em;
+    border-radius: 5px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit {
+    background: none;
+    border: none;
+}
+
+img {
+    box-shadow: grey 1px 1px 5px;
+}
+
+/* layout */
+header {
+    border: 1px solid grey;
+    width: 98%;
+    margin: 0 auto;
+    margin-top: var(--margin-top-value);
+}
+
+#logo {
+    width:  150px;
+    top: 50%;
+    left: 0;
+    cursor: pointer;
+    box-shadow: none;
+}
+#shopping-bag-icon {
+    position: absolute;
+    font-size: 50pt;
+    top: 25%;
+    right: 0;
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+    border: 1px solid grey;
+    margin: 0 auto;
+    margin-top: var(--margin-top-value);
+}
+
+nav .search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150%;
+    margin: 0 auto;
+    margin-left: 18%;
+}
+
+nav .search #search {
+    width: 100%;
+    height: 50px;
+    border: 2px solid grey;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-right-style: none;
+    font-size: 20pt;
+    text-align: center;
+    font-weight: bold;
+}
+
+nav .search #search:focus {
+    border: none;
+}
+
+nav .search button {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+nav .search i {
+    font-size: 30px;
+    text-align: center;
+    top: 50%;
+    padding: 11px 10px 11px 0;
+    border: 2px solid grey;
+    border-left-style: none;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    background: none;
+}
+
+#shopping-bag-icon {
+    font-size: 48pt;
+    vertical-align: auto;
+    color: black;
+}
+
+#user-info {
+    width: 100%;
+    right: 1rem;
+    margin-right: 1rem;
+}
+
+#user-info>a,
+.join {
+    color: #444444;
+    text-decoration: none;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.join {
+    width: 30%;
+    text-align: center;
+    margin-left: 1rem;
+}
+
+#user-info> .user {
+    margin-right: .5em;
+    float: right;
+}
+
+/* main */
+#main {
+    display: inline-grid;
+    /* grid-template-areas: 
+        "li li li li li"
+        "li li li li li"; */
+    text-align: center;
+    row-gap: 1em;
+    padding-top: 1em;
+    width: 100%;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.main-list {
+    display: inline-block;
+    border: 1px solid red;
+    cursor: pointer;
+    width: 80%;
+    padding: 10px 10px;
+    transition: .2s;
+    margin: 0 auto;
+}
+
+#main:hover .main-list {
+    opacity: .4;
+    transform: scale(0.9);
+}
+
+#main:hover .main-list:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: grey 0 0 5px;
+}
+
+.main-list-book {
+    height: 100%;
+}
+
+.book-image,
+.book-image-none {
+    width: 80%;
+    height: 80%;
+    background-color: lightgray;
+    text-align: center;
+}
+
+.title {
+    margin-top: 1em;
+    font-size: 9pt;
+    display: inline-block;
+}
+
+
+/* searchList */
+.search-list {
+    display: inline-block;
+    width: 100%;
+    border: 1px solid grey;
+    position: relative;
+    margin-top: var(--margin-top-value);
+}
+
+.show-search-list {
+    padding: 1em;
+}
+
+.search-list>form {
+    display: inline-block;
+    
+}
+
+.search-list .search-book-image {
+    width: 150px;
+    height: 190px;
+}
+
+.search-list .title {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    padding-left: 15px;
+    padding-top: 20px;
+    color: black;
+    text-decoration: none;
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+.search-list .buy {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-right: 15px;
+    padding-top: 15px;
+    text-align: center;
+}
+
+.search-list .buy .show-quantity {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1em;
+}
+
+.search-list .buy > * {
+    margin-bottom: .5em;
+}
+
+.search-list .buy button {
+    padding: .3em .8em;
+    font-size: 12pt;
+}
+
+.buy .price {
+    vertical-align: auto;
+}
+
+.buy .price .price-info {
+    font-size: 16pt;
+    color: red;
+    font-weight: bold;
+}
+
+.buy .cart-btn,
+.buy .buy-btn {
+    padding: .3em .6em;
+}
+
+.show-book {
+    border: none;
+    background: none;
+    display: inline-block;
+    height: 100%;
+}
+
+
+/* detailView */
+#detail {
+    position: relative;
+    margin-top: var(--margin-top-value);
+    border: 1px solid grey;
+    padding: 40px 20px;
+    padding-bottom: 5em;
+}
+
+.detail-book-image {
+    width: 20%;
+}
+
+.show-book-image {
+    display: inline;
+}
+
+.show-book-info {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    margin-top: 2em;
+    margin-left: 2em;
+    /* width: 100%; */
+}
+
+.show-book-info .book-title {
+    display: inline-block;
+    font-size: 14pt;
+    font-weight: bold;
+    margin-bottom: .5em;
+}
+
+.show-book-info .book-price .price-title {
+    margin-bottom: .2em;
+}
+
+.show-book-info .book-price .price {
+    font-size: 18pt;
+    color: red;
+    font-weight: bold;
+}
+
+.book-info {
+    width: 70%;
+    overflow: hidden;
+}
+
+.show-active {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    margin-right: 1em;
+}
+
+.show-active .show-quantity,
+.show-active .go-cart,
+.show-active .go-order {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1.5em;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.book-quantity {
+    width: 40px;
+    text-align: center;
+    font-size: 16pt;
+}
+
+.show-quantity button {
+    padding: .3em .8em;
+    font-size: 16pt;
+}
+
+.minus-btn {
+    background: none;
+    border: 1px solid grey;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    color: red;
+}
+
+.plus-btn {
+    background: none;
+    border: 1px solid grey;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: blue;
+}
+
+.cart-btn,
+.buy-btn {
+    padding: .5em 1.6em;
+    border-radius: 15px;
+    font-size: 14pt;
+}
+
+.cart-btn {
+    background-color: #e6e6e6;
+    color: #444444;
+}
+
+.buy-btn {
+    background-color: #d6d6d6;
+    color: #343434;
+}
+
+/* 장바구니 (cartView) */
+#cart {
+    border: 1px solid grey;
+    margin-top: var(--margin-top-value);
+    padding-bottom: 3em;
+}
+
+#cart h1 {
+    text-align: center;
+}
+
+#cart-item {
+    width: 100%;
+    border: 1px solid grey;
+    margin: 0 auto;
+    margin-top: calc(var(--margin-top-value) * 2);
+}
+
+.td-image {
+    width: 150px;
+    padding: 1em .5em;
+}
+
+tr,
+th,
+td {
+    border: 1px solid #444444;
+    text-align: center;
+    padding: 1em 1em;
+    font-size: 14pt;
+}
+
+td.book-title {
+    position: relative;
+}
+
+.remove-cart-item {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 3px;
+    margin-right: 3px;
+}
+
+.remove-cart-item-button {
+    color: red;
+    font-size: 14pt;
+    font-weight: bold;
+    background: none;
+    border: none;
+}
+
+.footer {
+    padding: 2rem 3rem;
+}
+
+.footer .buy-btn {
+    position: absolute;
+    right: 0;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* 결제하기(주문, orderView) */
+#selected-book {
+    width: 100%;
+    margin-top: var(--margin-top-value);
+    border: 1px solid grey;
+    padding: 1em 0;
+    padding-bottom: 2em;
+}
+
+#selected-book-header {
+    width: 70%;
+    margin: 0 auto;
+}
+
+#selected-book h1 {
+    display: inline-block;
+    border: 1px solid grey;
+    font-size: 14pt;
+    padding: 1em 2.5em;
+}
+
+#order-item {
+    width: 70%;
+    margin: 0 auto;
+}
+
+#pay-part {
+    width: 70%;
+    margin: 0 auto;
+}
+
+#pay-btn {
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px 0;
+    background-color: white;
+    font-size: 15pt;
+    transition: .15s;
+    margin-top: var(--margin-top-value);
+}
+
+#pay-btn:hover {
+    color: rgb(99, 99, 99);
+    border: 2px solid rgb(99, 99, 99);
+}
+
+#pay-btn .down-arrow {
+    margin-left: 2rem;
+}
+
+#input-order-info {
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-bottom: 3em;
+    border: 2px solid rgb(99, 99, 99);
+    border-top-style: none;
+}
+
+.g-btn {
+    display: inline-block;
+    border: 1px solid black;
+    background: none;
+    padding: .6em 1em;
+    border-radius: 5px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+}
+
+.address {
+    width: 100%;
+    border-bottom: 1px dashed grey;
+    padding-bottom: 1em;
+}
+
+.address .address-info {
+    display: inline-block;
+    margin-top: 3.5em;
+}
+
+.address-info > span {
+    display: inline-block;
+    width: 80%;
+    vertical-align: auto;
+    margin-bottom: 1em;
+}
+
+.zip-code {
+    width: 20%;
+    padding: .5em;
+    text-align: center;
+}
+
+.zip-code-info {
+    margin-bottom: .1em;
+}
+
+.basic-address,
+.detail-address {
+    width: 80%;
+    padding: .3em .5em;
+}
+
+.basic-address-info,
+.detail-address-info {
+    display: inline-block;
+}
+
+.detail-address-info {
+    margin-bottom: 1em;
+}
+
+.basic-address-info span,
+.detail-address-info span {
+    display: inline-block;
+    margin-bottom: 1em;
+}
+
+.pay {
+    display: inline-block;
+    margin-top: calc(var(--margin-top-value) + 1em);
+    margin-bottom: var(--margin-top-value);
+    border-bottom: 1px dashed grey;
+    padding-bottom: 1.5em;
+    width: 100%;
+}
+
+.credit-card-info > div {
+    margin-bottom: 1em;
+}
+
+.credit-card, .credit-card-type {
+    width: 13%;
+    text-align: center;
+    margin-bottom: .5em;
+    padding: 5px 10px;
+    text-align-last: center;
+}
+
+select {
+    text-align-last: center;
+    text-align: center;
+    -ms-text-align-last: center;
+    -moz-text-align-last: center;
+ }
+
+.buy-button {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+}
+
+.buy-button button {
+    margin-top: var(--margin-top-value);
+    width: 20%;
+    padding: 1em 0;
+    border-radius: 15px;
+    background: none;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+/* 내 정보 (showInfoView) */
+#showInfo {
+    width: 80%;
+    border: 1px solid grey;
+    margin: 0 auto;
+    margin-top: var(--margin-top-value);
+    padding: 2em 2em;
+}
+
+#show-creditCard,
+#show-address,
+#show-name {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 2em;
+}
+
+#show-name .name {
+    padding: .3em 0;
+    width: 15%;
+    text-align: center;
+    font-size: 14pt;
+    margin-left: .5em;
+    margin-right: 1em;
+}
+
+.show-card-type {
+    width: 10%;
+    padding: 5px 0;
+    text-align: center;
+}
+
+.zip-code {
+    width: 10%;
+}
+
+.info-btn {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+}
+
+#showInfo .s-btn {
+    float: none;
+}
+
+
+/* 내 정보 (saveView) */
+#save {
+    width: 80%;
+    border: 1px solid grey;
+    margin: 0 auto;
+    margin-top: var(--margin-top-value);
+    padding: 2em 2em;
+}
+
+#save-creditCard,
+#save-address,
+#save-name {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 2em;
+}
+
+#save-name>div {
+    display: inline-block;
+    margin-bottom: .5em;
+}
+
+#save-name>input {
+    padding: .3em 0;
+    width: 15%;
+    text-align: center;
+    font-size: 12pt;
+}
+
+.save-btn {
+    display: inline-block;
+    width: 90%;
+    text-align: right;
+}
+
+#save-creditCard>div,
+#save-address>div {
+    margin-bottom: .5em;
+}
+
+.input-save-info {
+    padding: 10px 0;
+}
+
+.address-info {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: .5em;
+}
+
+
+/* 회원가입(join) */
+#join {
+    margin-top: var(--margin-top-value);
+    border: 1px solid grey;
+    padding: 2em 1em;
+}
+
+#join .join-part {
+    width: 40%;
+    margin: 0 auto;
+    text-align: right;
+}
+
+#join .input-group {
+    margin-bottom: 1em;
+}
+
+#join .input-group label {
+    font-size: 14pt;
+    float: left;
+}
+
+#join .input-group input {
+    padding: 5px 10px;
+    font-size: 12pt;
+}
+
+.join-btn {
+    background: none;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: .5em 1em;
+    right: 0;
+}
+
+/* 로그인(login) */
+#login {
+    margin-top: var(--margin-top-value);
+    border: 1px solid grey;
+    padding: 2em 1em;
+}
+
+#login .login-part {
+    width: 40%;
+    margin: 0 auto;
+    text-align: right;
+}
+
+#login .input-group {
+    margin-bottom: 1em;
+}
+
+#login .input-group label {
+    font-size: 14pt;
+    float: left;
+}
+
+#login .input-group input {
+    padding: 5px 10px;
+    font-size: 12pt;
+}
+
+.login-btn {
+    background: none;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: .5em 1em;
+    right: 0;
+}
+
+/* 도서 등록 (addBook) */
+#add-book {
+    border: 1px solid grey;
+    margin-top: var(--margin-top-value);
+    padding: 2em 1em;
+}
+
+#add-book>div {
+    margin-bottom: var(--margin-top-value);
+}
+
+#add-book>div>input {
+    padding: 5px 5px;
+}
+
+.add-book-header {
+    display: inline-block;
+    font-size: 14pt;
+    color: black;
+    font-weight: bold;
+    margin-bottom: var(--margin-top-value);
+}
+
+.add-book-title>input {
+    width: 50%;
+}
+
+.add-book-info .add-book-info-header {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.add-book-info textarea {
+    width: 80%;
+    margin-left: .5em;
+    padding: 5px;
+}
+
+.add-book-image {
+    vertical-align: top;
+}
+
+.img-preview {
+    display: inline-block;
+    margin-top: var(--margin-top-value);
+}
+
+#add-book .btn {
+    border: 1px solid black;
+    border-radius: 10px;
+    background: none;
+    padding: .5em 1.2em;
+    font-size: 12pt;
+    margin-left: var(--margin-top-value);
+}
+
+.buttons .g-btn {
+    margin-right: .5em;
+}
+
+/* 배송지 신용카드 보여주기 (showInfoView) */
+.address-info-index,
+.card-info-index {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: .5em 1em;
+    cursor: pointer;
+    margin-top: .5em;
+}
+
+#close-address-info,
+#close-card-info {
+    cursor: pointer;
+    color: black;
+    border: 1px solid grey;
+    padding: 2px 1em;
+    border-radius: 5px;
+    color: red;
+    font-weight: bold;
+}
+
+/* 추가 부분 */
+#show-select-address,
+#show-select-creditCard {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 2em;
+}
+
+#show-select-address span,
+#show-select-creditCard span {
+    display: inline-block;
+    margin-bottom: 1em;
+}
+
+.select-get-address {
+    margin-top: .5em;
+}
+
+.select-get-credit-card {
+    margin-top: 1.5em;
+}
+
+#update-card {
+    display: inline-block;
+    margin-top: var(--margin-top-value);
+}

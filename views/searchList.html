@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- 검색하면 나오는 리스트 화면 -->
+        <ul id="search-view">
+        {% for book in books %}
+            <li class="search-list">
+                <div class="show-search-list">
+                    <form action="/book">
+                        <input type="hidden" value="{{book.number}}" name="bookNumber">
+                        {% if book.imageSource %}
+                            <button type="submit" class="submit">
+                                <img class="search-book-image" src="{{book.imageSource}}" alt="{{book.title}}">
+                            </button>
+                        {% else %}
+                            <button type="submit" class="submit">
+                                <img class="search-book-image" src="no_image.png" alt="{{book.title}}">
+                            </button>
+                        {% endif %}
+                        <button type="submit" class="submit">
+                            <span class="title">{{book.title}}</span>
+                        </button>
+                    </form>
+                    <div class="buy">
+                        <div class="show-can-order">
+                            {% if book.canOrder %}
+                                <span class="can-order">판매 중</span>
+                            {% else %}
+                                <span class="cant-order">수량 부족</span>
+                            {% endif %}
+                        </div>
+                        <div class="price">
+                            <span class="price-info">{{book.price}}</span>
+                            <span>원</span>
+                        </div>
+                        <div class="show-quantity">
+                            <button class="minus-btn">-</button>
+                            <input type="number" value="1" name="quantity" class="book-quantity">
+                            <button class="plus-btn">+</button>
+                        </div>
+                        <form action="/cart" method="post">
+                            <input type="hidden" value="{{book.number}}" name="bookNumber" class="book-number">
+                            <input type="hidden" value="1" name="quantity" class="book-quantity-copy">
+                            <button class="cart-btn">장바구니</button>
+                        </form>
+                        <form action="/order" method="post">
+                            <input type="hidden" value="notCart" name="payType">
+                            <input type="hidden" value="{{book.number}}" name="bookNumber" class="book-number">
+                            <input type="hidden" value="1" name="quantity" class="book-quantity-copy">
+                            <button class="buy-btn {{book.number}}">바로구매</button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+{% endblock %}
+
+{% block script %}
+<script>
+    // function count(type) {
+    //     document.querySelectorAll('.book-quantity').forEach(quantity => {
+    //         console.log(quantity);
+    //         console.log(quantity.value);
+    //         console.log(quantity.parentNode);
+    //         console.log(quantity.parentNode.parentNode);
+    //         if (type === 'minus') {
+    //             quantity.value = parseInt(quantity.value) - 1;
+    //         } else if (type === 'plus') {
+    //             quantity.value = parseInt(quantity.value) + 1;
+    //         }
+
+    //         const quantity_copys = quantity.parentNode.querySelectorAll('.book-quantity-copy');
+    //         quantity_copys.forEach(quantity_copy => {
+    //             quantity_copy.value = quantity.value;
+    //         })
+    //     })
+    // }
+    window.onload = () => {
+        document.querySelectorAll('.minus-btn').forEach(minusButton => {
+            minusButton.addEventListener('click', e => {
+                const quantity = e.target.parentNode.getElementsByClassName('book-quantity')[0];
+                if (quantity.value <= 1) {
+                    quantity.value = 1;
+                    return;
+                }
+                quantity.value = parseInt(quantity.value) - 1;
+
+                const quantityCopys = e.target.parentNode.parentNode.querySelectorAll('.book-quantity-copy');
+                quantityCopys.forEach(quantityCopy => {
+                    quantityCopy.value = quantity.value;
+                })
+            })
+        })
+
+        document.querySelectorAll('.plus-btn').forEach(plusButton => {
+            plusButton.addEventListener('click', e => {
+                const quantity = e.target.parentNode.getElementsByClassName('book-quantity')[0];
+                quantity.value = parseInt(quantity.value) + 1;
+
+                const quantityCopys = e.target.parentNode.parentNode.querySelectorAll('.book-quantity-copy');
+                quantityCopys.forEach(quantityCopy => {
+                    quantityCopy.value = quantity.value;
+                })
+            })
+        })
+    }
+</script>
+{% endblock %}

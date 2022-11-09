@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="cart">
+        <h1>장바구니</h1>
+        <table id="cart-item">
+            <tr>
+                <th>이미지</th>
+                <th>도서</th>
+                <th>수량</th>
+                <th>단가</th>
+                <th>합계</th>
+            </tr>
+            {% for cartItem in cartItems %}
+                <tr>
+                    <td class="td-image">
+                        {% if cartItem.Book.imageSource %}
+                        <img class="book-image" src="{{cartItem.Book.imageSource}}" alt="{{cartItem.Book.title}}">
+                        {% else %}
+                        <img class="book-image" src="no_image.png" alt="{{cartItem.Book.title}}">
+                        {% endif %}
+                    </td>
+                    <td class="book-title">
+                        <div>{{cartItem.Book.title}}</div>
+                        <form action="/cart/remove" class="remove-cart-item" method="post">
+                            <input type="hidden" value="{{cartItem.Book.number}}" name="bookNumber">
+                            <button type="submit" class="remove-cart-item-button">X</button>
+                        </form>
+                    </td>
+                    <td>
+                        <div class="cart-book-quantity">{{cartItem.quantity}}</div>
+                    </td>
+                    <td class="book-price">
+                        <div>{{cartItem.Book.price}}</div>
+                    </td>
+                    <td class="book-total-price">
+                        <div>{{cartItem.quantity * cartItem.Book.price}}</div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="footer">
+            <form action="/order" method="post">
+                <input type="hidden" value="cart" name="payType">
+                <button class="buy-btn" type="submit">구매하기</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

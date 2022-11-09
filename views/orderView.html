@@ -1,0 +1,345 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="selected-book">
+        <div id="selected-book-header">
+            <h1>주문 항목</h1>
+        </div>
+        <table id="order-item">
+            <tr>
+                <th>이미지</th>
+                <th>도서</th>
+                <th>수량</th>
+                <th>단가</th>
+                <th>합계</th>
+            </tr>
+            {% if book %}
+                <tr>
+                    <td class="td-image">
+                        {% if book.imageSource %}
+                            <img class="book-image" src="{{book.imageSource}}" alt="{{book.title}}">
+                        {% else %}
+                            <img class="book-image" src="no_image.png" alt="{{book.title}}">
+                        {% endif %}
+                    </td>
+                    <td>{{book.title}}</td>
+                    <td>{{quantity}}</td>
+                    <td>{{book.price}}</td>
+                    <td class="book-total-price">{{quantity * book.price}}</td>
+                </tr>
+            {% endif %}
+
+            {% for cartItem in cartItems %}
+                <tr>
+                    <td class="td-image">
+                        {% if cartItem.Book.imageSource %}
+                            <img class="book-image" src="{{cartItem.Book.imageSource}}" alt="{{cartItem.Book.title}}">
+                        {% else %}
+                            <img class="book-image" src="no_image.png" alt="{{cartItem.Book.title}}">
+                        {% endif %}
+                    </td>
+                    <td>{{cartItem.Book.title}}</td>
+                    <td>{{cartItem.quantity}}</td>
+                    <td>{{cartItem.Book.price}}</td>
+                    <td class="book-total-price">{{cartItem.quantity * cartItem.Book.price}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div id="pay-part">
+            <button id="pay-btn">결제하기<span class="down-arrow">▽</span></button>
+            <form action="/order/pay" method="post" id="input-order-info">
+                <!-- 데이터 저장 부분 -->
+                {% if book %}
+                    <input type="hidden" value="{{book.number}}" id="book-number" name="bookNumber">
+                    <input type="hidden" value="{{quantity}}" id="quantity" name="quantity">
+                {% endif %}
+                {% for cartItem in cartItems %}
+                    <input type="hidden" value="{{cartItem.book_number}}" id="book-number" name="bookNumber">
+                    <input type="hidden" value="{{cartItem.quantity}}" id="quantity" name="quantity">
+                {% endfor %}
+                <input type="hidden" name="totalPrice" id="total-price">
+                <!-- 실제 보여지는 부분 -->
+                <div class="address" style="display: none;">
+                    <label for="address" class="address-info">
+                        <span><b>배송지</b></span>
+                        <span class="zip-code-info">우편번호: <input type="text" pattern="[0-9]+" minlength="5" maxlength="5" name="zipCode" class="zip-code" required> <br/></span>
+                        <span class="basic-address-info">
+                            <span>기본주소: </span>
+                            <input type="text" name="basicAddress" class="basic-address" required> <br/>
+                        </span>
+                        <span class="detail-address-info">
+                            <span>상세주소: </span>
+                            <input type="text" name="detailAddress" class="detail-address" required> <br/>
+                        </span>
+                        <div class="buttons">
+                            <div class="g-btn" id="get-address">배송지 가져오기</div>
+                            <div class="g-btn" id="save-address-btn">배송지 저장</div>
+                        </div>
+                    </label>
+                    <!-- 배송지 가져오기 부분 -->
+                    <div class="select-get-address" style="display: none;">
+                        {% for addressInfo in addressInfos %}
+                            <input type="hidden" value="{{addressInfo.zipCode}}" class="zipCode">
+                            <span class="address-info-index">
+                                배송지 {{addressInfo.index}}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div><br>
+                <div class="pay" style="display: none;">
+                    <label for="credit-card" class="credit-card-info">
+                        <div><b>신용카드</b></div>
+                        카드번호: <input type="text" pattern="[0-9]+" minlength="4" maxlength="4" name="cardNumber" class="credit-card" required> -
+                        <input type="text" pattern="[0-9]+" minlength="4" maxlength="4" name="cardNumber" class="credit-card" required> -
+                        <input type="text" pattern="[0-9]+" minlength="4" maxlength="4" name="cardNumber" class="credit-card" required> -
+                        <input type="text" pattern="[0-9]+" minlength="4" maxlength="4" name="cardNumber" class="credit-card" required> <br/>
+                        유효기간: <input type="text" pattern="[0-9]+" minlength="2" maxlength="2" name="expirationDay" class="credit-card" placeholder="MM" required> /
+                        <input type="text" pattern="[0-9]+" minlength="2" maxlength="2" name="expirationYear" class="credit-card" placeholder="yy" required> <br/>
+                        카드종류: <select class="credit-card-type" name="creditCardType" required>
+                                    <option value="NH">농협</option>
+                                    <option value="WOORI">우리</option>
+                                    <option value="IBK">IBK</option>
+                                    <option value="BUSAN">부산</option>
+                            </select> <br/>
+                        <div class="buttons">
+                            <div class="g-btn" id="get-credit-card">신용카드 가져오기</div>
+                            <div class="g-btn" id="save-credit-card">신용카드 저장</div>
+                        </div>
+                    </label>
+                    <!-- 신용카드 가져오기 부분 -->
+                    <div class="select-get-credit-card" style="display: none;">
+                        {% for cardInfo in cardInfos %}
+                            <input type="hidden" value="{{cardInfo.cardNumber}}" class="cardNumber">
+                            <span class="card-info-index">
+                                신용카드 {{cardInfo.index}}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if book %}
+                    <input type="hidden" value="none" name="payWith">
+                {% endif %}
+                {% if cartItems %}
+                    <input type="hidden" value="cart" name="payWith">
+                {% endif %}
+                <div class="buy-button" style="display: none;">
+                    <button type="submit">구매하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function getTotalPrice() {
+            const totalPrices = document.querySelectorAll('.book-total-price');
+            let total = 0;
+            totalPrices.forEach(totalPrice => {
+                total += parseInt(totalPrice.innerText);
+            })
+            return total;
+        }
+
+        window.onload = () => {
+            document.getElementById('total-price').value = getTotalPrice();
+        }
+
+        // 결제하기 버튼
+        document.getElementById('pay-btn').addEventListener('click', e => {
+            const address = document.getElementsByClassName('address')[0];
+            const pay = document.getElementsByClassName('pay')[0];
+            const buyButton = document.getElementsByClassName('buy-button')[0];
+            const zipCode = document.getElementsByName('zipCode')[0];
+
+            if (address.style.display === 'none'){
+                address.style.display = 'inline-block';
+            } else {
+                address.style.display = 'none';
+            }
+            
+            if (pay.style.display === 'none'){
+                pay.style.display = 'inline-block';
+            } else {
+                pay.style.display = 'none';
+            }
+            
+            if (buyButton.style.display === 'none'){
+                buyButton.style.display = 'inline-block';
+            } else {
+                 buyButton.style.display = 'none';
+            }
+
+            zipCode.focus();
+        })
+
+        const card_numbers = document.getElementsByName('cardNumber');
+		card_numbers.forEach((card_number, index) => {
+			card_number.addEventListener('keyup', function (e) {
+				// 번호 입력 시
+				if (48 <= e.keyCode && e.keyCode <= 57) {
+					if (this.value.length == 4) {
+						card_numbers[index + 1]?.focus();
+					}
+				}
+			})
+		});
+
+		document.getElementsByName('expirationDay')[0]?.addEventListener('keyup', function (e) {
+				// 번호 입력 시
+				if (48 <= e.keyCode && e.keyCode <= 57) {
+					if (this.value.length == 2) {
+						document.getElementsByName('expirationYear')[0]?.focus();
+					}
+				}
+			});
+  
+        // 배송지 가져오기 
+        document.getElementById('get-address').addEventListener('click', e => {
+            const getAddress = document.getElementsByClassName('select-get-address')[0];
+            if (getAddress.style.display == 'inline-block') {
+                getAddress.style.display = 'none';
+            } else {
+                getAddress.style.display = 'inline-block';
+            }
+        })
+
+        document.querySelectorAll('.select-get-address').forEach(cardInfo => {
+            cardInfo.addEventListener('click', e => {
+                // 배송지 클릭 시 zipCode가져와
+                // 해당하는 배송지 정보 가져오기
+                const index = parseInt(e.target.innerText.split(' ')[1]) - 1;
+                const zipCode = e.target.parentNode.getElementsByClassName('zipCode')[index].value;
+
+                axios.get(`/info/${zipCode}/address`)
+                .then(res => {
+                    const address = res.data.addressInfo;
+                    console.log(address);
+                    if (address === undefined || address === null) {
+                        alert("옳지 않은 배송지입니다..");
+                        return;
+                    }
+                    document.getElementsByClassName('zip-code')[0].value = address.zipCode;
+                    document.getElementsByClassName('basic-address')[0].value = address.basicAddress;
+                    document.getElementsByClassName('detail-address')[0].value = address.detailAddress;
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+            })
+        })
+
+        // 배송지 저장
+        document.getElementById('save-address-btn').addEventListener('click', e => {
+            const zipCode = document.getElementsByClassName('zip-code')[0].value;
+            const basicAddress = document.getElementsByClassName('basic-address')[0].value;
+            const detailAddress = document.getElementsByClassName('detail-address')[0].value;
+            if (zipCode === null || zipCode === undefined || zipCode === 0 || zipCode === '' || zipCode.length !== 5) {
+                alert('배송지 양식을 지켜 입력하십시오.');
+                document.getElementsByClassName('zip-code')[0].focus();
+            } else {
+                axios.post('/save/add/address', { zipCode, basicAddress, detailAddress })
+                .then(res => {
+                    if (res.data == 'success') {
+                        alert("배송지를 등록하였습니다.");
+                        // location.reload();
+                    } else {
+                        throw new Error('배송지 등록 실패');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+            }
+        })
+
+        // 신용카드 가져오기
+        document.getElementById('get-credit-card').addEventListener('click', e => {
+            const getCreditCard = document.getElementsByClassName('select-get-credit-card')[0];
+            if (getCreditCard.style.display == 'inline-block') {
+                getCreditCard.style.display = 'none';
+            } else {
+                getCreditCard.style.display = 'inline-block';
+            }
+        })
+ 
+        document.querySelectorAll('.select-get-credit-card').forEach(cardInfo => {
+            cardInfo.addEventListener('click', e => {
+                // 카드 클릭 시 cardNumber가져와
+                // 해당하는 카드 정보 가져오기
+                const index = parseInt(e.target.innerText.split(' ')[1]) - 1;
+                const cardNumber = e.target.parentNode.getElementsByClassName('cardNumber')[index].value;
+                
+                axios.get(`/info/${cardNumber}/card`)
+                .then(res => {
+                    const creditCard = res.data.cardInfo;
+                    console.log(creditCard);
+                    if (creditCard === undefined || creditCard === null) {
+                        alert("옳지 않은 신용카드입니다.");
+                        return;
+                    }
+                    
+                    /*
+                        creditCardInfo Index
+                        0 ~ 3: 카드 번호
+                        4: expirationDay
+                        5: expirationYear
+                    */
+                    const cardInfo = document.getElementsByClassName('credit-card');
+                    cardInfo[0].value = creditCard.cardNumber1;
+                    cardInfo[1].value = creditCard.cardNumber2;
+                    cardInfo[2].value = creditCard.cardNumber3;
+                    cardInfo[3].value = creditCard.cardNumber4;
+                    cardInfo[4].value = creditCard.expirationDay;
+                    cardInfo[5].value = creditCard.expirationYear;
+
+                    // 카드 종류
+                    const el = document.getElementsByClassName('credit-card-type')[0];  //select box
+                    const len = el.options.length; //select box의 option 갯수
+                    const str = creditCard.cardType; //입력 받은 value 값
+                    //select box의 option 갯수만큼 for문 돌림
+                    for (let i = 0; i < len; i++){  
+                        //select box의 option value가 입력 받은 value의 값과 일치할 경우 selected
+                        if(el.options[i].value == str){
+                            el.options[i].selected = true;
+                            break;
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+            })
+        })
+
+        // 신용카드 저장
+        document.getElementById('save-credit-card').addEventListener('click', e => {
+            const cardInfo = document.getElementsByClassName('credit-card');
+
+            if (cardInfo[0].value == '' || cardInfo[1].value == '' || cardInfo[2].value == '' || cardInfo[3].value == '' ||
+            cardInfo[4].value == '' || cardInfo[5].value == '') {
+                alert('신용카드 양식을 지켜 입력하십시오.');
+                cardInfo[0].focus();
+            }
+            else {
+                const cardNumber = [cardInfo[0].value, cardInfo[1].value, cardInfo[2].value, cardInfo[3].value];
+                const expirationDay = cardInfo[4].value;
+                const expirationYear = cardInfo[5].value
+                const creditCardType = document.getElementsByClassName('credit-card-type')[0].value;
+                
+                axios.post('/save/add/creditCard', { cardNumber, expirationDay, expirationYear, creditCardType })
+                .then(res => {
+                    if (res.data == 'success') {
+                        alert("신용카드를 등록하였습니다.");
+                        // location.reload();
+                    } else {
+                        throw new Error('신용카드 등록 실패');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+            }
+        })
+    </script>
+{% endblock %}

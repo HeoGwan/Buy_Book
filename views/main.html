@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <ul id="main">
+        {% for book in books %}
+            <li class="main-list">
+                <form action="/book" class="main-list-book">
+                    <input type="hidden" value="{{book.number}}" name="bookNumber">
+                    <button type="submit" class="show-book">
+                        {% if book.imageSource %}
+                            <img class="book-image" src="{{book.imageSource}}" alt="{{book.title}}">
+                        {% else %}
+                            <img class="book-image" src="no_image.png" alt="{{book.title}}">
+                        {% endif %}
+                        <div class="title">{{book.title}}</div>
+                    </button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
