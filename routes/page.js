@@ -1,6 +1,7 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { Book, CreditCard, ShippingAddress } = require('../models');
+const { Book, CreditCard, ShippingAddress, Order } = require('../models');
+const { getOrder, getOrders } = require('../find');
 
 const router = express.Router();
 
