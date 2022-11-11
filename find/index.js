@@ -2,126 +2,277 @@ const e = require('express');
 const { Order, OrderItem, Cart, Book, CartItem, User, CreditCard, ShippingAddress } = require('../models');
 
 const getOrders = (userID) => {
-    return Order.findAll({
-        where: {
-            user_id: userID,
-        }
-    });
-}
-
-const getOrder = (userID) => {
-    return Order.findOne({
-        where: {
-            user_id: userID,
-        }
-    });
-}
-
-const getOrderItems = (userID) => {
-    return OrderItem.findAll({
-        include: [{
-            model: Cart,
+    return new Promise((resolve, reject) => {
+        Order.findAll({
             where: {
                 user_id: userID,
             }
-        }, {
-            model: Book,
-        }]
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
+    })
+}
+
+const getOrder = (userID) => {
+    return new Promise((resolve, reject) => {
+        Order.findOne({
+            where: {
+                user_id: userID,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
+    })
+}
+
+const getOrderItems = (userID) => {
+    return new Promise((resolve, reject) => {
+        OrderItem.findAll({
+            include: [{
+                model: Order,
+                where: {
+                    user_id: userID,
+                }
+            }, {
+                model: Book,
+            }]
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
     })
 }
 
 const getOrderItem = (userID) => {
-    return OrderItem.findOne({
-        include: [{
-            model: Cart,
+    return new Promise((resolve, reject) => {
+        OrderItem.findOne({
+            include: [{
+                model: Order,
+                where: {
+                    user_id: userID,
+                }
+            }, {
+                model: Book,
+            }]
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })      
+    })
+}
+
+const getCarts = (userID) => {
+    return new Promise((resolve, reject) => {
+        Cart.findAll({
             where: {
                 user_id: userID,
             }
-        }, {
-            model: Book,
-        }]
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
+    })
+}
+
+const getCart = (userID) => {
+    return new Promise((resolve, reject) => {
+        Cart.findOne({
+            where: {
+                user_id: userID,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
     })
 }
 
 const getCartItems = (userID) => {
-    return CartItem.findAll({
-        include: [{
-            model: Cart,
-            where: {
-                user_id: userID,
-            }
-        }, {
-            model: Book,
-        }]
+    return new Promise((resolve, reject) => {
+        CartItem.findAll({
+            include: [{
+                model: Cart,
+                where: {
+                    user_id: userID,
+                }
+            }, {
+                model: Book,
+            }]
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
     })
 }
 
 const getCartItem = (userID) => {
-    return CartItem.findOne({
-        include: [{
-            model: Cart,
-            where: {
-                user_id: userID,
-            }
-        }, {
-            model: Book,
-        }]
+    return new Promise((resolve, reject) => {
+        CartItem.findOne({
+            include: [{
+                model: Cart,
+                where: {
+                    user_id: userID,
+                }
+            }, {
+                model: Book,
+            }]
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
     })
 }
 
 const getBooks = (bookNumber) => {
-    return Book.findAll({
-        where: {
-            number: bookNumber,
-        }
-    });
+    return new Promise((resolve, reject) => {
+        Book.findAll({
+            where: {
+                number: bookNumber,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
+    })
 }
 
 const getBook = (bookNumber) => {
-    return Book.findOne({
-        where: {
-            number: bookNumber,
-        }
-    });
+    return new Promise((resolve, reject) => {
+        Book.findOne({
+            where: {
+                number: bookNumber,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
+    })
 }
 
 const getUser = (userID) => {
-    return User.findOne({
-        where: {
-            id: userID,
-        }
-    });
+    return new Promise((resolve, reject) => {
+        User.findOne({
+            where: {
+                id: userID,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
+    })
 }
 
 const getCreditCards = (userID) => {
-    return CreditCard.findAll({
-        where: {
-            user_id: userID,
-        }
-    });
+    return new Promise((resolve, reject) => {
+        CreditCard.findAll({
+            where: {
+                user_id: userID,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
+    })
 }
 
 const getCreditCard = (userID) => {
-    return CreditCard.findOne({
-        where: {
-            user_id: userID,
-        }
+    return new Promise((resolve, reject) => {
+        CreditCard.findOne({
+            where: {
+                user_id: userID,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
     })
 }
 
 const getAddresses = (userID) => {
-    return ShippingAddress.findAll({
-        where: {
-            user_id: userID,
-        }
+    return new Promise((resolve, reject) => {
+        ShippingAddress.findAll({
+            where: {
+                user_id: userID,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
     })
 }
 
 const getAddress = (userID) => {
-    return ShippingAddress.findOne({
-        where: {
-            user_id: userID,
-        }
+    return new Promise((resolve, reject) => {
+        ShippingAddress.findOne({
+            where: {
+                user_id: userID,
+            }
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })
     })
 }
 
@@ -130,6 +281,8 @@ module.exports = {
     getOrders,
     getOrderItems,
     getOrderItem,
+    getCarts,
+    getCart,
     getCartItems,
     getCartItem,
     getBooks,
