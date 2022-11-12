@@ -131,6 +131,16 @@ router.post('/pay', async (req, res, next) => {
     try {
         console.log(req.user.id);
 
+        // 이전 주문과 회원 간의 연결 끊음
+        Order.update({
+            user_id: null,
+        }, {
+            where: {
+                user_id: req.user.id,
+            },
+        });
+
+        // 새 주문 정보 추가
         const order = await Order.create({
             totalPrice,
             creditCardNumber,
