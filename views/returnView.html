@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="return">
+        <h1>주문 확인</h1>
+        <table id="cart-item">
+            <tr>
+                <th>이미지</th>
+                <th>도서</th>
+                <th>수량</th>
+                <th>단가</th>
+                <th>합계</th>
+            </tr>
+            {% if order.status === 'ready' or order.status == 'cancel' or order.status == 'return' %}
+                {% for orderItem in orderItems %}
+                    <tr>
+                        <td class="td-image">
+                            {% if orderItem.Book.imageSource %}
+                            <img class="book-image" src="{{orderItem.Book.imageSource}}" alt="{{orderItem.Book.title}}">
+                            {% else %}
+                            <img class="book-image" src="no_image.png" alt="{{orderItem.Book.title}}">
+                            {% endif %}
+                        </td>
+                        <td class="book-title">
+                            <div>{{orderItem.Book.title}}</div>
+                            <form action="/cart/remove" class="remove-cart-item" method="post">
+                                <input type="hidden" value="{{orderItem.Book.number}}" name="bookNumber">
+                            </form>
+                        </td>
+                        <td>
+                            <div class="cart-book-quantity">{{orderItem.quantity}}</div>
+                        </td>
+                        <td class="book-price">
+                            <div>{{orderItem.Book.price}}</div>
+                        </td>
+                        <td class="book-total-price">
+                            <div>{{orderItem.quantity * orderItem.Book.price}}</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+        <div class="footer">            
+            <form action="/return/cancel" method="post">
+                {% if order.status === 'ready' %}
+                    <button type="submit">주문 취소</button>
+                {% elif order.status === 'cancel' %}
+                    <button type="submit">주문 반품</button>
+                {% elif order.status === 'return' %}
+                    <input type="radio" value="badBook" name="returnReason"> 도서 불량 
+                    <input type="radio" value="changeMind" name="returnReason"> 고객 변심
+                    <button type="submit">환불</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

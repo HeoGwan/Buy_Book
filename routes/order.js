@@ -131,6 +131,14 @@ router.post('/pay', async (req, res, next) => {
     try {
         console.log(req.user.id);
 
+        Order.update({
+            user_id: null,
+        }, {
+            where: {
+                user_id: req.user.id,
+            },
+        });
+        
         const order = await Order.create({
             totalPrice,
             creditCardNumber,
@@ -141,7 +149,9 @@ router.post('/pay', async (req, res, next) => {
             detailAddress,
             user_id: req.user.id,
             orderDate: new Date(),
+            status: 'ready',
         });
+
 
         if (payWith == 'cart') {
             // 장바구니 결제
@@ -193,7 +203,7 @@ router.get('/pay/done', async (req, res, next) => {
     // 바로 구매 결제 처리
     console.log('/pay/done');
     try {
-        // 결제 처리 후 메인 페이지로 이동
+        //결제 처리 후 메인 페이지로 이동
         // Order.update({
         //     user_id: null,
         // }, {

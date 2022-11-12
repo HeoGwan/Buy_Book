@@ -41,6 +41,31 @@ module.exports = class Order extends Sequelize.Model {
                 type: Sequelize.TEXT,
                 allowNull: true,
             },
+            // ready, cancel, delievering, complete, allReturn, partReturn, confirm,
+            status: {
+                type: Sequelize.TEXT,
+                allowNull: true,
+            },
+            returnCallDate: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
+            returnReason: {
+                type: Sequelize.TEXT,
+                allowNull: true,
+            },
+            totalReturnPrice: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
+            returnDate: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
+            returnQuantity: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
         }, {
             sequelize,
             timestamps: false,
