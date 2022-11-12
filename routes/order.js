@@ -194,13 +194,13 @@ router.get('/pay/done', async (req, res, next) => {
     console.log('/pay/done');
     try {
         // 결제 처리 후 메인 페이지로 이동
-        Order.update({
-            user_id: null,
-        }, {
-            where: {
-                user_id: req.user.id,
-            },
-        });
+        // Order.update({
+        //     user_id: null,
+        // }, {
+        //     where: {
+        //         user_id: req.user.id,
+        //     },
+        // });
 
         res.redirect('/');
     } catch (err) {
