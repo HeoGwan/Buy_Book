@@ -151,6 +151,7 @@ router.post('/pay', async (req, res, next) => {
             detailAddress,
             user_id: req.user.id,
             orderDate: new Date(),
+            status: 'ready',
         });
 
         if (payWith == 'cart') {

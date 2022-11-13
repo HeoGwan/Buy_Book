@@ -57,12 +57,35 @@ const getOrderItems = (userID) => {
     })
 }
 
-const getOrderItem = (userID) => {
+function getOrderItem(userID) {
     return new Promise((resolve, reject) => {
         OrderItem.findOne({
             include: [{
                 model: Order,
                 where: {
+                    user_id: userID,
+                }
+            }, {
+                model: Book,
+            }]
+        })
+        .then(result => {
+            resolve(result);
+        })
+        .catch(err => {
+            console.error(err);
+            reject(err);
+        })      
+    })
+}
+
+function getOrderItem(userID, orderNumber) {
+    return new Promise((resolve, reject) => {
+        OrderItem.findOne({
+            include: [{
+                model: Order,
+                where: {
+                    order_number: orderNumber,
                     user_id: userID,
                 }
             }, {
