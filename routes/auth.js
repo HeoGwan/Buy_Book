@@ -24,6 +24,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
         });
         await Cart.create({
             user_id: id,
+            had_user_id: id,
             createDate: new Date(),
         });
         

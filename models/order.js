@@ -41,6 +41,11 @@ module.exports = class Order extends Sequelize.Model {
                 type: Sequelize.TEXT,
                 allowNull: true,
             },
+            ordered_user_id: {
+                // 주문 했었던 회원 저장
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
         }, {
             sequelize,
             timestamps: false,

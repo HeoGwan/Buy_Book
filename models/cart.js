@@ -13,6 +13,10 @@ module.exports = class Cart extends Sequelize.Model {
                 type: Sequelize.DATE,
                 allowNull: true,
             },
+            had_user_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            },
         }, {
             sequelize,
             timestamps: false,

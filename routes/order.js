@@ -151,6 +151,7 @@ router.post('/pay', async (req, res, next) => {
             detailAddress,
             user_id: req.user.id,
             orderDate: new Date(),
+            ordered_user_id: req.user.id,
         });
 
         if (payWith == 'cart') {
@@ -234,6 +235,7 @@ router.get('/pay/done/cart', async (req, res, next) => {
 
         await Cart.create({
             user_id: req.user.id,
+            had_user_id: req.user.id,
             createDate: new Date(),
         });
 
