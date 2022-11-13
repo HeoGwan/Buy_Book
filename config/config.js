@@ -15,6 +15,7 @@ module.exports = {
         database: 'db_program_test',
         host: '127.0.0.1',
         dialect: 'mysql',
+        timezone: '+09:00',
     },
     production: {
         username: 'root',
@@ -22,6 +23,7 @@ module.exports = {
         database: 'db_program',
         host: '127.0.0.1',
         dialect: 'mysql',
+        timezone: '+09:00',
         logging: false,
     },
 }

@@ -14,7 +14,7 @@ module.exports = class Cart extends Sequelize.Model {
                 allowNull: true,
             },
             had_user_id: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING(20),
                 allowNull: true,
             },
         }, {

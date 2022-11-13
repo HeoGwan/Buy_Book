@@ -43,7 +43,7 @@ module.exports = class Order extends Sequelize.Model {
             },
             ordered_user_id: {
                 // 주문 했었던 회원 저장
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING(20),
                 allowNull: true,
             },
         }, {
