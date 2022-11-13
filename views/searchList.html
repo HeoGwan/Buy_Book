@@ -22,6 +22,10 @@
                         </button>
                     </form>
                     <div class="buy">
+                        <div class="show-stock-search">
+                            <span>남은 수량: </span>
+                            <span>{{book.stock}}</span> <br>
+                        </div>
                         <div class="show-can-order">
                             {% if book.canOrder %}
                                 <span class="can-order">판매 중</span>

@@ -257,6 +257,7 @@ nav .search i {
 
 .show-search-list {
     padding: 1em;
+    padding-bottom: 2.5em;
 }
 
 .search-list>form {

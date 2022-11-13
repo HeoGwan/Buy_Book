@@ -26,6 +26,7 @@ router.get('/', async (req, res, next) => {
                     title: book.title,
                     price: book.price,
                     imageSource: book.imageSource,
+                    stock: book.stock,
                     canOrder: false,
                 })
             } else {
@@ -34,6 +35,7 @@ router.get('/', async (req, res, next) => {
                     title: book.title,
                     price: book.price,
                     imageSource: book.imageSource,
+                    stock: book.stock,
                     canOrder: true,
                 })
             }
