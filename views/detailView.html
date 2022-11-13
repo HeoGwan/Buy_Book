@@ -21,6 +21,10 @@
             </div>
         </div>
         <div class="show-active">
+            <div class="show-stock">
+                <span>남은 수량: </span>
+                <span>{{book.stock}}</span> <br>
+            </div>
             <div class="show-can-order">
                 {% if canOrder %}
                     <span class="can-order">판매 중</span>
