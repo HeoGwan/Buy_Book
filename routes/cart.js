@@ -2,6 +2,7 @@ const express = require('express');
 const Op = require('sequelize').Op;
 const { isLoggedIn } = require('./middlewares');
 const { Cart, CartItem, Book, sequelize, User } = require('../models');
+const { getCartItem } = require('../find');
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
             }],
         });
 
-        console.log(cartItems);
+        // console.log(cartItems);
         res.render('cartView', { cartItems });
     } catch (err) {
         console.error(err);
@@ -27,7 +28,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 })
 
 router.post('/', isLoggedIn, async (req, res, next) => {
-    console.log('asdf', req.body);
+    // console.log('asdf', req.body);
 
     const bookNumber = req.body.bookNumber;
     const quantity = req.body.quantity;
@@ -50,6 +51,19 @@ router.post('/', isLoggedIn, async (req, res, next) => {
             },
         }, { t });
 
+        const prevCartItem = await getCartItem(req.user.id, bookNumber)
+
+        if (prevCartItem && prevCartItem.in_cart == 'false') {
+            // 만약 이전에 저장된 책이 있다면 in_cart가 false일 경우 true로 바꿔줘야 함
+            await CartItem.update({
+                in_cart: 'true',
+            }, {
+                where: {
+                    number: prevCartItem.number,
+                }
+            })
+        }
+
         if (book.stock < quantity) {
             return res.send('<script>alert("재고량이 부족하여 장바구니에 담을 수 없습니다."); \
             window.location = document.referrer;</script>');
@@ -68,6 +82,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 
 router.post('/remove', async (req, res, next) => {
     const bookNumber = req.body.bookNumber;
+    // console.log('/remove bookNumber', bookNumber);
     try {
         const removeCartItem = await CartItem.findOne({
             attributes: ['number'],
@@ -90,7 +105,7 @@ router.post('/remove', async (req, res, next) => {
             }
         });
 
-        res.redirect('/cart');
+        return res.send('success');
     } catch (err) {
         console.error(err);
         next(err);

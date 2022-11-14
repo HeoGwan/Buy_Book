@@ -2,48 +2,117 @@
 
 {% block content %}
     <div id="cart">
-        <h1>장바구니</h1>
-        <table id="cart-item">
-            <tr>
-                <th>이미지</th>
-                <th>도서</th>
-                <th>수량</th>
-                <th>단가</th>
-                <th>합계</th>
-            </tr>
-            {% for cartItem in cartItems %}
-                <tr>
-                    <td class="td-image">
-                        {% if cartItem.Book.imageSource %}
-                        <img class="book-image" src="{{cartItem.Book.imageSource}}" alt="{{cartItem.Book.title}}">
-                        {% else %}
-                        <img class="book-image" src="no_image.png" alt="{{cartItem.Book.title}}">
-                        {% endif %}
-                    </td>
-                    <td class="book-title">
-                        <div>{{cartItem.Book.title}}</div>
-                        <form action="/cart/remove" class="remove-cart-item" method="post">
-                            <input type="hidden" value="{{cartItem.Book.number}}" name="bookNumber">
-                            <button type="submit" class="remove-cart-item-button">X</button>
-                        </form>
-                    </td>
-                    <td>
-                        <div class="cart-book-quantity">{{cartItem.quantity}}</div>
-                    </td>
-                    <td class="book-price">
-                        <div>{{cartItem.Book.price}}</div>
-                    </td>
-                    <td class="book-total-price">
-                        <div>{{cartItem.quantity * cartItem.Book.price}}</div>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-        <div class="footer">
-            <form action="/order" method="post">
-                <input type="hidden" value="cart" name="payType">
-                <button class="buy-btn" type="submit">구매하기</button>
-            </form>
+        <div id="all-check">
+            <input type="checkbox" id="all-check-button">
+            전체 선택
         </div>
+        <h1>장바구니</h1>
+        <form action="/order" method="post">
+            <table id="cart-item">
+                <tr>
+                    <th>이미지</th>
+                    <th>도서</th>
+                    <th>수량</th>
+                    <th>단가</th>
+                    <th>합계</th>
+                </tr>
+                {% for cartItem in cartItems %}
+                    {% if cartItem.in_cart === 'true' %}
+                        <tr>
+                            <td class="td-image-check">
+                                <div class="td-check">
+                                    <input type="checkbox" name="orderBook" value="{{cartItem.book_number}}" id="bookNumber{{cartItem.book_number}}" class="check-order-book">
+                                </div>
+                                <div class="td-image">
+                                    {% if cartItem.Book.imageSource %}
+                                    <img class="book-image" src="{{cartItem.Book.imageSource}}" alt="{{cartItem.Book.title}}">
+                                    {% else %}
+                                    <img class="book-image" src="no_image.png" alt="{{cartItem.Book.title}}">
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="book-title">
+                                <div>{{cartItem.Book.title}}</div>
+                                <input type="hidden" value="{{cartItem.Book.number}}" name="bookNumber" class="remove-book-number">
+                                <span class="remove-cart-item-button">X</span>
+                            </td>
+                            <td>
+                                <div class="cart-book-quantity">{{cartItem.quantity}}</div>
+                            </td>
+                            <td class="book-price">
+                                <div>{{cartItem.Book.price}}</div>
+                            </td>
+                            <td class="book-total-price">
+                                <div>{{cartItem.quantity * cartItem.Book.price}}</div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+            <div class="footer">
+                    <input type="hidden" value="cart" name="payType">
+                    <button class="buy-btn" type="submit">구매하기</button>
+            </div>
+        </form>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        const checkButtons = document.querySelectorAll('.check-order-book');
+        const allCheckButton = document.getElementById('all-check-button');
+        // 전체 선택 누를 시 전체 선택 or 해제
+        
+        allCheckButton.addEventListener('click', e => {
+            if (e.target.checked) {
+                checkButtons.forEach(checkButton => {
+                    checkButton.checked = true;
+                })
+            } else {
+                checkButtons.forEach(checkButton => {
+                    checkButton.checked = false;
+                })
+            }
+        })
+
+        window.onload = () => {
+            document.getElementById('all-check-button').checked = true;
+            checkButtons.forEach(checkButton => {
+                    checkButton.checked = true;
+                })
+        }
+
+        checkButtons.forEach(checkButton => {
+            checkButton.addEventListener('click', e => {
+                if (e.target.checked) {
+                    // checkButtons 전부 돌기
+                    for (let i = 0; i < checkButtons.length; i++) {
+                        if (checkButtons[i].checked == false) {
+                            // 체크 해제된거 있으면 allCheckButton 해제
+                            allCheckButton.checked = false;
+                            return;
+                        }
+                    }
+                    // 해당 버튼 눌렀을 때 나머지 다 체크 되어있으면
+                    allCheckButton.checked = true;
+                } else {
+                    // 만약 체크를 해제하면 전체 선택도 해제 됨
+                    allCheckButton.checked = false;
+                }
+            })
+        })
+
+        document.querySelectorAll('.remove-cart-item-button').forEach(removeButton => {
+            removeButton.addEventListener('click', e => {
+                const removeBookNumber = e.target.parentNode.getElementsByClassName('remove-book-number')[0].value;
+                axios.post('/cart/remove', { bookNumber: removeBookNumber })
+                .then(res => {
+                    location.href = "/cart";
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+            })
+        })
+    </script>
 {% endblock %}

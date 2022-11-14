@@ -13,6 +13,11 @@ module.exports = class CartItem extends Sequelize.Model {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
+            in_cart: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'true',
+            }
         }, {
             sequelize,
             timestamps: false,

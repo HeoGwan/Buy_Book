@@ -233,8 +233,9 @@ nav .search i {
 
 .book-image,
 .book-image-none {
-    width: 80%;
-    height: 80%;
+    display: block;
+    width: 90%;
+    margin: 0 auto;
     background-color: lightgray;
     text-align: center;
 }
@@ -453,20 +454,46 @@ input::-webkit-inner-spin-button {
     padding-bottom: 3em;
 }
 
+#all-check {
+    display: inline-block;
+    margin-left: 1em;
+    margin-top: 1em;
+}
+
 #cart h1 {
     text-align: center;
 }
 
 #cart-item {
-    width: 100%;
+    width: 70%;
     border: 1px solid grey;
     margin: 0 auto;
     margin-top: calc(var(--margin-top-value) * 2);
 }
 
+#cart-item .book-image {
+    width: 70%;
+}
+
+.td-image-check {
+    align-items: center;
+    width: 20%;
+}
+
+.td-check {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.check-order-book {
+    transform: scale(1.2);
+}
+
 .td-image {
+    /* display: inline-block; */
     width: 150px;
-    padding: 1em .5em;
+    padding: 1em 1em;
 }
 
 tr,
@@ -482,20 +509,18 @@ td.book-title {
     position: relative;
 }
 
-.remove-cart-item {
+.remove-cart-item-button {
     position: absolute;
     bottom: 0;
     right: 0;
-    margin-bottom: 3px;
-    margin-right: 3px;
-}
-
-.remove-cart-item-button {
+    margin-bottom: 5px;
+    margin-right: 5px;
     color: red;
     font-size: 14pt;
     font-weight: bold;
     background: none;
     border: none;
+    cursor: pointer;
 }
 
 .footer {

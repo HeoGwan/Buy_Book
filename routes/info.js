@@ -41,7 +41,7 @@ router.get('/', async (req, res, next) => {
 
         if (shippingAddressInfos !== null || shippingAddressInfos !== undefined) {
             shippingAddressInfos.forEach(address => {
-                console.log(address.zipCode);
+                // console.log(address.zipCode);
                 const addressInfo = {};
                 addressInfo.index = (++addressIndex);
                 addressInfo.zipCode = address.zipCode;
@@ -80,7 +80,7 @@ router.get('/:addressZipCode/address', async (req, res, next) => {
 
 router.get('/:cardNumber/card', async (req, res, next) => {
     const cardNumber = req.params.cardNumber;
-    console.log(cardNumber);
+    // console.log(cardNumber);
     try {
         // 유저가 가지고 있는 해당 카드를 가져온 뒤
         // 정보를 가공해 넘겨줌

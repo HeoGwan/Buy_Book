@@ -263,10 +263,12 @@ function getCartItem(userID, cartBookNumber) {
         // 회원이 가지고 있는 장바구니 항목 중 특정 도서 1개
         return new Promise((resolve, reject) => {
             CartItem.findOne({
+                where: {
+                    book_number: cartBookNumber,                    
+                },
                 include: [{
                     model: Cart,
                     where: {
-                        book_number: cartBookNumber,
                         user_id: userID,
                     }
                 }, {

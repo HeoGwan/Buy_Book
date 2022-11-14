@@ -26,14 +26,14 @@ const upload = multer({
 });
 
 router.post('/img', upload.single('img'), (req, res) => {
-    console.log(req.file);
+    // console.log(req.file);
     res.json({ url: `/img/${req.file.filename}` });
 })
 
 const bookUpload = multer();
 router.post('/', bookUpload.none(), async (req, res, next) => {
     // console.log(req.body, req.query, req.param);
-    console.log(req.body);
+    // console.log(req.body);
     try {        
         const book = await Book.create({
             title: req.body.title,
@@ -42,7 +42,7 @@ router.post('/', bookUpload.none(), async (req, res, next) => {
             info: req.body.info,
             imageSource: req.body.url,
         });        
-        console.log(`${req.body.title} 등록에 성공했습니다!`);
+        // console.log(`${req.body.title} 등록에 성공했습니다!`);
         res.redirect('/');
     } catch (err) {
         console.error(err)

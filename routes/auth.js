@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post('/join', isNotLoggedIn, async (req, res, next) => {
     const { id, password, name } = req.body;
-    console.log(id, password, name);
+    // console.log(id, password, name);
     try {
         const exUser = await User.findOne({ where: { id } });
         if (exUser) {

@@ -42,7 +42,7 @@ router.get('/book', async (req, res, next) => {
             canOrder = false;
         }
 
-        console.log('book', book);
+        // console.log('book', book);
         return res.render('detailView', { book, canOrder });
     } catch (err) {
         console.error(err);
@@ -90,7 +90,7 @@ router.get('/creditCard', async (req, res, next) => {
 })
 
 router.get('/address', async (req, res, next) => {
-    console.log('/address')
+    // console.log('/address')
     try {
         const address = await ShippingAddress.findOne({
             where: {

@@ -5,7 +5,7 @@ const { Book } = require('../models');
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
-    console.log(req.query);
+    // console.log(req.query);
     const searchWord = req.query.search;
 
     try {
@@ -41,7 +41,7 @@ router.get('/', async (req, res, next) => {
             }
         })
 
-        console.log('books', books);
+        // console.log('books', books);
         return res.render('searchList', { books });
     } catch (err) {
         console.error(err);

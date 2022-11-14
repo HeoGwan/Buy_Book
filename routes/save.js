@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', isLoggedIn, async (req, res, next) => {
     const changeInfo = req.query.changeInfo;
-    console.log(changeInfo)
+    // console.log(changeInfo)
     try {
         let add = false;
         if (changeInfo == 'address') {
