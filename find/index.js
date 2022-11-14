@@ -122,10 +122,12 @@ function getOrderItem(userID, orderBookNumber) {
         // 회원이 주문한 주문항목 중 특정 주문 항목만 검색
         return new Promise((resolve, reject) => {
             OrderItem.findOne({
+                where: {
+                    book_number: orderBookNumber,
+                },
                 include: [{
                     model: Order,
                     where: {
-                        book_number: orderBookNumber,
                         user_id: userID,
                     }
                 }, {

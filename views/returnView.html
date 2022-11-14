@@ -1,0 +1,114 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="return">
+        <h1>장바구니</h1>
+        <table id="return-item">
+            <tr>
+                <th>이미지</th>
+                <th>도서</th>
+                <th>수량</th>
+                <th>단가</th>
+                <th>합계</th>
+                {% if order.status === 'completeDeliever' %}
+                    <th>환불</th>
+                {% endif %}
+            </tr>
+            {% for orderItem in orderItems %}
+                <tr>
+                    <td class="td-image">
+                        {% if orderItem.Book.imageSource %}
+                        <img class="book-image" src="{{orderItem.Book.imageSource}}" alt="{{orderItem.Book.title}}">
+                        {% else %}
+                        <img class="book-image" src="no_image.png" alt="{{orderItem.Book.title}}">
+                        {% endif %}
+                    </td>
+                    <td class="book-title">
+                        <div>{{orderItem.Book.title}}</div>
+                        <form action="/cart/remove" class="remove-cart-item" method="post">
+                            <input type="hidden" value="{{orderItem.Book.number}}" name="bookNumber">
+                            <button type="submit" class="remove-cart-item-button">X</button>
+                        </form>
+                    </td>
+                    <td>
+                        <div class="cart-book-quantity">{{orderItem.quantity}}</div>
+                    </td>
+                    <td class="book-price">
+                        <div>{{orderItem.Book.price}}</div>
+                    </td>
+                    <td class="book-total-price">
+                        <div>{{orderItem.quantity * orderItem.Book.price}}</div>
+                    </td>
+                    {% if order.status === 'completeDeliever' %}
+                    <td>
+                        <div class="show-quantity">
+                            <button class="minus-btn" onclick="count('minus')">-</button>
+                            <input type="number" value="1" name="quantity" class="book-quantity">
+                            <button class="plus-btn" onclick="count('plus')">+</button>
+                        </div>
+                        <form action="/return/part" method="post">
+                            <input type="hidden" value="{{orderItem.book_number}}" name="bookNumber">
+                            <input type="hidden" value="1" name="quantity" class="book_quantity_copy">
+                            <input type="radio" value="badBook" name="returnReason"> 도서 불량
+                            <input type="radio" value="changeMind" name="returnReason"> 고객 변심
+                            <button type="submit">도서 환불</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        <div id="order-status">
+            <span>주문 상태: </span>
+            {% if order.status === 'ready' %}
+                <span>주문 완료(배송 준비 중)</span>
+            {% elif order.status === 'cancel' %}
+                <span>주문 취소</span>
+            {% elif order.status === 'delievering' %}
+                <span>배송 중</span>
+            {% elif order.status === 'completeDeliever' %}
+                <span>배송 완료</span>
+            {% elif order.status === 'allReturn' %}
+                <span>전체 반품 완료</span>
+            {% elif order.status === 'partReturn' %}
+                <span>일부 반품 완료</span>
+            {% elif order.status === 'confirm' %}
+                <span>구매 확정</span>
+            {% endif %}
+        </div>
+        <div class="footer">
+            {% if order.status === 'ready' %}
+                <form action="/return/cancel" method="post">
+                    <button type="submit">주문 취소</button>
+                </form>
+                <form action="/return/completeDeliever" method="post">
+                    <button type="submit">배송 완료</button>
+                </form>
+            {% elif order.status === 'completeDeliever' %}
+                <form action="/return/all" method="post">
+                    <input type="radio" value="badBook" name="returnReason"> 도서 불량
+                    <input type="radio" value="changeMind" name="returnReason"> 고객 변심
+                    <button type="submit">전체 환불</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        function count(type) {
+            const quantity = document.getElementsByClassName('book-quantity')[0];
+            
+            if (type === 'minus') {
+                quantity.value = parseInt(quantity.value) - 1;
+            } else if (type === 'plus') {
+                quantity.value = parseInt(quantity.value) + 1;
+            }
+
+            const quantity_copys = document.querySelectorAll('.book_quantity_copy');
+            quantity_copys.forEach(quantity_copy => {
+                quantity_copy.value = quantity.value;
+            })
+        }
+    </script>
+{% endblock %}
