@@ -30,8 +30,8 @@
                 <th>수량</th>
                 <th>단가</th>
                 <th>합계</th>
+                <!-- 일부 반품 -->
                 {% if order.status === 'completeDeliver' %}
-                    <!-- 일부 반품 -->
                     <th>반품 수량</th>
                 {% endif %}
             </tr>
@@ -53,22 +53,31 @@
                         <div>{{orderItem.Book.title}}</div>
                     </td>
                     <td>
-                        <div class="cart-book-quantity">{{orderItem.quantity}}</div>
+                        {% if order.status === 'partReturn' %}
+                            <div class="cart-book-quantity">{{orderItem.quantity - orderItem.returnQuantity}}</div>
+                        {% else %}
+                            <div class="cart-book-quantity">{{orderItem.quantity}}</div>
+                        {% endif %}
                     </td>
                     <td class="book-price">
                         <div>{{orderItem.Book.price}}</div>
                     </td>
                     <td class="book-total-price">
-                        <div>{{orderItem.quantity * orderItem.Book.price}}</div>
+                        {% if order.status === 'partReturn' %}
+                            <div>{{(orderItem.quantity * orderItem.Book.price) - (orderItem.returnQuantity * orderItem.Book.price)}}</div>
+                        {% else %}
+                            <div>{{orderItem.quantity * orderItem.Book.price}}</div>
+                        {% endif %}
                     </td>
+                    <!-- 일부 반품 -->
                     {% if order.status === 'completeDeliver' %}
-                        <!-- 일부 반품 -->
                         <td>
+                            <input type="number" value="1" class="book-quantity">
                             <form action="/return/part" method="post">
                                 <input type="hidden" value="{{orderItem.Book.number}}" name="returnBookNumber">
-                                <input type="number" value="1" name="returnQuantity"><!-- 반품 사유 -->
+                                <input type="hidden" value="1" name="returnQuantity" class="book-quantity-copy">
                                 <label for="badBook">
-                                    <input type="radio" name="returnReason" value="badBook"> 도서 불량
+                                    <input type="radio" name="returnReason" value="badBook" checked> 도서 불량
                                 </label>
                                 <label for="changeMind">
                                     <input type="radio" name="returnReason" value="changeMind"> 고객 변심
@@ -97,7 +106,7 @@
                 <form action="/return/all" method="post">
                     <!-- 반품 사유 -->
                     <label for="badBook">
-                        <input type="radio" name="returnReason" value="badBook"> 도서 불량
+                        <input type="radio" name="returnReason" value="badBook" checked> 도서 불량
                     </label>
                     <label for="changeMind">
                         <input type="radio" name="returnReason" value="changeMind"> 고객 변심
@@ -111,6 +120,19 @@
 
 {% block script %}
     <script>
+        document.querySelectorAll('.book-quantity').forEach(returnQuantity => {
+            returnQuantity.addEventListener('keyup', e => {
+                console.log(e.keyCode);
+                if (48 <= e.keyCode && e.keyCode <= 57) {
+                    e.target.parentNode.getElementsByClassName('book-quantity-copy')[0].value = parseInt(e.target.value);
+                    // 엔터 누를 시 innerText를 value값에 넣음
+                    console.log(e.target);
+                    console.log(e.returnValue);
+                    console.log(e.target.parentNode.getElementsByClassName('book-quantity-copy')[0]);
+                }
+            })
+        })
+
         // const checkButtons = document.querySelectorAll('.check-order-book');
         // const allCheckButton = document.getElementById('all-check-button');
         // // 전체 선택 누를 시 전체 선택 or 해제

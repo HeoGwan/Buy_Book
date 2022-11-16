@@ -62,24 +62,6 @@
 
 {% block script %}
 <script>
-    // function count(type) {
-    //     document.querySelectorAll('.book-quantity').forEach(quantity => {
-    //         console.log(quantity);
-    //         console.log(quantity.value);
-    //         console.log(quantity.parentNode);
-    //         console.log(quantity.parentNode.parentNode);
-    //         if (type === 'minus') {
-    //             quantity.value = parseInt(quantity.value) - 1;
-    //         } else if (type === 'plus') {
-    //             quantity.value = parseInt(quantity.value) + 1;
-    //         }
-
-    //         const quantity_copys = quantity.parentNode.querySelectorAll('.book-quantity-copy');
-    //         quantity_copys.forEach(quantity_copy => {
-    //             quantity_copy.value = quantity.value;
-    //         })
-    //     })
-    // }
     window.onload = () => {
         document.querySelectorAll('.minus-btn').forEach(minusButton => {
             minusButton.addEventListener('click', e => {
@@ -109,5 +91,16 @@
             })
         })
     }
+
+    document.querySelectorAll('.book-quantity').forEach(returnQuantity => {
+            returnQuantity.addEventListener('keyup', e => {
+                if (48 <= e.keyCode && e.keyCode <= 57) {
+                    const quantity_copys = e.target.parentNode.parentNode.querySelectorAll('.book-quantity-copy');
+                    quantity_copys.forEach(quantity_copy => {
+                        quantity_copy.value = parseInt(e.target.value);
+                    })
+                }
+            })
+        })
 </script>
 {% endblock %}

@@ -68,5 +68,17 @@
                 quantity_copy.value = quantity.value;
             })
         }
+
+        document.querySelectorAll('.book-quantity').forEach(returnQuantity => {
+            returnQuantity.addEventListener('keyup', e => {
+                console.log(e.keyCode);
+                if (48 <= e.keyCode && e.keyCode <= 57) {
+                    const quantity_copys = document.querySelectorAll('.book-quantity-copy');
+                    quantity_copys.forEach(quantity_copy => {
+                        quantity_copy.value = parseInt(e.target.value);
+                    })
+                }
+            })
+        })
     </script>
 {% endblock %}

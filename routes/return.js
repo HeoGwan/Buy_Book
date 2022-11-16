@@ -10,7 +10,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
         const order = await getOrder(req.user.id);
         const orderItems = await getOrderItems(req.user.id);
 
-        res.render('returnView', { orderItems, order });        
+        res.render('returnView', { orderItems, order });
     } catch (err) {
         console.error(err);
         next(err);
@@ -102,13 +102,12 @@ router.post('/part', isLoggedIn, async (req, res, next) => {
     const returnCallDate = new Date();
     const returnReason = req.body.returnReason;
     const returnQuantity = req.body.returnQuantity;
-    const returnBookNumber = req.body.returnBookNumber;
+    const returnBookNumber = parseInt(req.body.returnBookNumber);
 
     const transaction = await sequelize.transaction();
     try {
         // 주문 상태 변경
         // 환불 총액: 반품할 책 가격 * 반품 수량
-       console.log('returnBookNUmber', returnBookNumber);
         const returnBook = await getBook(returnBookNumber);
         
         let totalReturnPrice = returnBook.price * returnQuantity;
@@ -129,7 +128,7 @@ router.post('/part', isLoggedIn, async (req, res, next) => {
         returnDate.setDate(returnCallDate.getDate() + 3);
 
         await Order.update({
-            status: 'allReturn',
+            status: 'partReturn',
             returnCallDate,
             returnReason,
             totalReturnPrice,
@@ -145,22 +144,28 @@ router.post('/part', isLoggedIn, async (req, res, next) => {
         // 해당 주문 항목에 있는 책 재고량 변경 및 주문 항목에 반품 수량 추가
         const orderItem = await getOrderItem(req.user.id, returnBookNumber);
 
+        if (orderItem.quantity < returnQuantity || 
+            returnQuantity < 0) {
+            return res.send('<script>alert("수량보다 많이 반품할 수 없습니다."); \
+            window.location = document.referrer;</script>');
+        }
+
         let bookStock = 0;
 
-        bookStock = returnBook.stock + orderItem.quantity;
+        bookStock = returnBook.stock + returnQuantity;
 
         await Book.update({
             stock: bookStock,
         }, {
             where: {
-                number: returnBookNumber.number,
+                number: returnBook.number,
             },
             transaction,
         })
 
         // 반품 수량 추가
         await OrderItem.update({
-            returnQuantity: orderItem.quantity,
+            returnQuantity,
         }, {
             where: {
                 number: orderItem.number,
