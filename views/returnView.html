@@ -1,0 +1,201 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="cart">
+        <!-- <div id="all-check">
+            <input type="checkbox" id="all-check-button">
+            전체 선택
+        </div> -->
+        <h1>장바구니</h1>
+        <span>주문 상태: </span>
+        {% if order.status === 'ready' %}
+            <span>주문 완료</span>
+        {% elif order.status === 'cancel' %}
+            <span>주문 취소</span>
+        {% elif order.status === 'delievering' %}
+            <span>배송 중</span>
+        {% elif order.status === 'completeDeliver' %}
+            <span>배송 완료</span>
+        {% elif order.status === 'allReturn' %}
+            <span>전체 반품</span>
+        {% elif order.status === 'partReturn' %}
+            <span>일부 반품</span>
+        {% elif order.status === 'confirm' %}
+            <span>구매 확정</span>
+        {% endif %}
+        <table id="cart-item">
+            <tr>
+                <th>이미지</th>
+                <th>도서</th>
+                <th>수량</th>
+                <th>단가</th>
+                <th>합계</th>
+                {% if order.status === 'completeDeliver' %}
+                    <th>반품</th>
+                {% endif %}
+            </tr>
+            {% for orderItem in orderItems %}
+                {% if orderItem.quantity %}
+                    <tr>
+                        <td class="td-image-check">
+                            <!-- <div class="td-check">
+                                <input type="checkbox" name="orderBook" value="{{orderItem.book_number}}" id="bookNumber{{orderItem.book_number}}" class="check-order-book">
+                            </div> -->
+                            <div class="td-image">
+                                {% if orderItem.Book.imageSource %}
+                                <img class="book-image" src="{{orderItem.Book.imageSource}}" alt="{{orderItem.Book.title}}">
+                                {% else %}
+                                <img class="book-image" src="no_image.png" alt="{{orderItem.Book.title}}">
+                                {% endif %}
+                                <!-- 장바구니 등록 -->
+                                <form action="/cart/" method="post">
+                                    <input type="hidden" value="{{orderItem.book_number}}" name="bookNumber">
+                                    <input type="hidden" value="{{orderItem.quantity}}" name="quantity">
+                                    <button type="submit">장바구니 등록</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td class="book-title">
+                            <div>{{orderItem.Book.title}}</div>
+                        </td>
+                        <td>
+                            <div class="cart-book-quantity">{{orderItem.quantity}}</div>
+                        </td>
+                        <td class="book-price">
+                            <div>{{orderItem.Book.price}}</div>
+                        </td>
+                        <td class="book-total-price">
+                            <div>{{orderItem.quantity * orderItem.Book.price}}</div>
+                        </td>
+                        {% if order.status === 'completeDeliver' %}
+                            <td>
+                                <div class="show-quantity">
+                                    <input type="hidden" value="{{orderItem.book_number}}" name="returnBookNumber" class="book-number">
+                                    <button class="minus-btn">-</button>
+                                    <input type="number" value="1" name="returnQuantity" class="book-quantity">
+                                    <button class="plus-btn">+</button>
+                                </div>
+                                <form action="/return/part" method="post">
+                                    <input type="hidden" value="{{orderItem.book_number}}" name="returnBookNumber">
+                                    <input type="hidden" value="1" name="returnQuantity" class="book-quantity-copy">
+                                    <input type="radio" value="badBook" name="returnReason"> 도서 불량
+                                    <input type="radio" value="changeMind" name="returnReason"> 고객 변심
+                                    <button type="submit">도서 반품</button>
+                                </form>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+            {% endfor %}            
+        </table>
+        <div class="footer">
+            {% if order.status === 'ready' %}
+                <form action="/return/cancel" method="post">
+                    <button type="submit">주문 취소</button>
+                </form>
+                <form action="/return/completeDeliver" method="post">
+                    <button type="submit">배송 완료</button>
+                </form>
+            {% elif order.status === 'cancel' %}
+                <form action="/return/completeDeliver" method="post">
+                    <button type="submit">배송 완료</button>
+                </form>
+            {% elif order.status === 'completeDeliver' %}
+                <form action="/return/all" method="post">
+                    <input type="radio" value="badBook" name="returnReason"> 도서 불량
+                    <input type="radio" value="changeMind" name="returnReason"> 고객 변심
+                    <button type="submit">전체 반품</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        // const checkButtons = document.querySelectorAll('.check-order-book');
+        // const allCheckButton = document.getElementById('all-check-button');
+        // // 전체 선택 누를 시 전체 선택 or 해제
+        
+        // allCheckButton.addEventListener('click', e => {
+        //     if (e.target.checked) {
+        //         checkButtons.forEach(checkButton => {
+        //             checkButton.checked = true;
+        //         })
+        //     } else {
+        //         checkButtons.forEach(checkButton => {
+        //             checkButton.checked = false;
+        //         })
+        //     }
+        // })
+
+        // window.onload = () => {
+        //     document.getElementById('all-check-button').checked = true;
+        //     checkButtons.forEach(checkButton => {
+        //             checkButton.checked = true;
+        //         })
+        // }
+
+        // checkButtons.forEach(checkButton => {
+        //     checkButton.addEventListener('click', e => {
+        //         if (e.target.checked) {
+        //             // checkButtons 전부 돌기
+        //             for (let i = 0; i < checkButtons.length; i++) {
+        //                 if (checkButtons[i].checked == false) {
+        //                     // 체크 해제된거 있으면 allCheckButton 해제
+        //                     allCheckButton.checked = false;
+        //                     return;
+        //                 }
+        //             }
+        //             // 해당 버튼 눌렀을 때 나머지 다 체크 되어있으면
+        //             allCheckButton.checked = true;
+        //         } else {
+        //             // 만약 체크를 해제하면 전체 선택도 해제 됨
+        //             allCheckButton.checked = false;
+        //         }
+        //     })
+        // })
+
+        const plusBtns = document.querySelectorAll('.plus-btn');
+        const minusBtns = document.querySelectorAll('.minus-btn');
+
+        plusBtns.forEach(plusBtn => {
+            plusBtn.addEventListener('click', e => {
+                let quantity = e.target.parentNode.getElementsByClassName('book-quantity')[0];
+                const orderBookNumber = quantity.parentNode.getElementsByClassName('book-number')[0].value;
+
+                axios.post('/return/count', { orderBookNumber })
+                .then(res => {
+                    const orderItem = res.data.orderItem;
+
+                    if (quantity.value < orderItem.quantity) {
+                        quantity.value = (parseInt(quantity.value) + 1);
+                    } else {
+                        alert('환불 수량을 초과했습니다.');
+                    }
+                    
+                    const quantity_copy = e.target.parentNode.parentNode.querySelectorAll('.book-quantity-copy')[0];
+                    quantity_copy.value = quantity.value;
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+            })
+        })
+
+        minusBtns.forEach(minusBtn => {
+            minusBtn.addEventListener('click', e => {
+                const quantity = e.target.parentNode.getElementsByClassName('book-quantity')[0];
+
+                if (quantity.value - 1 > 0) {
+                    quantity.value = parseInt(quantity.value) - 1;
+                }
+                
+                const quantity_copys = e.target.parentNode.parentNode.querySelectorAll('.book-quantity-copy');
+                quantity_copys.forEach(quantity_copy => {
+                    quantity_copy.value = quantity.value;
+                })
+            })
+        })
+    </script>
+{% endblock %}
