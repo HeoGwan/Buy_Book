@@ -40,6 +40,11 @@
                 <button type="submit" class="s-btn">신용카드 추가</button>
             </form>
         </div>
+        <div id="show-point">
+            현재 적립금: <input type="number" value="{{user.point}}" readonly> <br>
+            적립급스탬프: <input type="number" value="{{user.pointStamp}}" readonly> <br>
+
+        </div>
 
         <!-- 선택한 배송지 정보 -->
         <div id="show-select-address" style="display: none;">

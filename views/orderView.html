@@ -116,6 +116,13 @@
                         {% endfor %}
                     </div>
                 </div>
+                <div class="point">
+                    {% if user %}  
+                        현재 적립금: <input type="number" value="{{user.point}}" readonly> <br>
+                        적립금스탬프: <input type="number" value="{{user.pointStamp}}" readonly> <br>
+                        적립금 사용(1000원 단위): <input type="number" value="0" name="usePoint">
+                    {% endif %}
+                </div>
                 {% if book %}
                     <input type="hidden" value="none" name="payWith">
                 {% endif %}

@@ -16,6 +16,16 @@ module.exports = class User extends Sequelize.Model {
                 type: Sequelize.STRING(10),
                 allowNull: false,
             },
+            point: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
+            pointStamp: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
         }, {
             sequelize,
             timestamps: false,

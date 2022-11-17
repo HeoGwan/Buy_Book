@@ -66,6 +66,11 @@ module.exports = class Order extends Sequelize.Model {
                 type: Sequelize.DATE,
                 allowNull: true,
             },
+            usePoint: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                defaultValue: 0,
+            },
         }, {
             sequelize,
             timestamps: false,

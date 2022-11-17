@@ -21,6 +21,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
             id,
             password: hash,
             name,
+            point: 10000,
         });
         await Cart.create({
             user_id: id,

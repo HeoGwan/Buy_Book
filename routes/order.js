@@ -2,7 +2,7 @@ const express = require('express');
 const { Book, Order, User, sequelize, Cart, CartItem, CreditCard, ShippingAddress } = require('../models');
 const Op = require('sequelize').Op;
 const { isLoggedIn } = require('./middlewares');
-const { getCartItem, getCartItems } = require('../find');
+const { getCartItem, getCartItems, getUser } = require('../find');
 
 const router = express.Router();
 
@@ -114,8 +114,11 @@ router.post('/', isLoggedIn, async (req, res, next) => {
                     }
                 })
 
+                // 적립금이 얼마나 있는지 알려주기 위해 가져옴
+                const user = await getUser(req.user.id);
+
                 // console.log(cartItems);
-                res.render('orderView', { cartItems, cardInfos, addressInfos });
+                res.render('orderView', { cartItems, cardInfos, addressInfos, user });
             }
         }
     } catch (err) {
@@ -133,10 +136,11 @@ router.post('/pay', async (req, res, next) => {
         bookNumbers = Array(bookNumbers);
     }
     // console.log('/pay bookNumbers', bookNumbers);
+    // 도서 구매 수량
     const quantity = req.body.quantity;
     const payWith = req.body.payWith;
 
-    const totalPrice = req.body.totalPrice;
+    let totalPrice = req.body.totalPrice;
     
     // 신용카드
     const cardNumbers = req.body.cardNumber;
@@ -157,11 +161,52 @@ router.post('/pay', async (req, res, next) => {
 
     let cantOrderBook = [];
 
+    // 사용 적립금 가져오기
+    const usePoint = req.body.usePoint;
+
+    let point = 0;
+
     // 주문을 찾아서 해당 주문에 주문 정보 넣은 후 결제 처리
     const transaction = await sequelize.transaction();
     try {
-        // console.log(req.user.id);
-        // console.log('order')
+        console.log('userPoint', usePoint);
+        // 적립금 관련 정보를 가지고 오기 위해 사용
+        const user = await getUser(req.user.id);
+
+        let payPrice = totalPrice;
+
+        // 적립금 사용 부분 -> 적립금 포인트가 10 이상일 경우
+        // 적립금 포인트 10 깎고 적립금 사용 가능
+        // (구매총액 - 적립금사용액)의 10% 적립
+
+        if (user.pointStamp >= 10 && usePoint > 0) {
+            // 적립금은 1000원 단위로만 사용 가능
+            if ((usePoint % 1000) != 0) {
+                // 500원 단위로 사용 시
+                return res.send('<script>alert("적립금은 1000원 단위로 사용하실 수 있습니다."); \
+                    window.location = document.referrer;</script>');
+            }
+
+            // 결제 금액은 총 주문 금액에 적립금사용액을 뺀 만큼
+            payPrice -= usePoint;
+
+            // 적립 포인트
+            point = (totalPrice - usePoint) / 10;
+            // 적립 스탬프 사용
+            console.log('user.pointStamp', user.pointStamp);
+            let pointStamp = (parseInt(user.pointStamp) - 10);
+            console.log(pointStamp);
+
+            await User.update({
+                point,
+                pointStamp,
+            }, {
+                where: {
+                    id: req.user.id,
+                }
+            });
+            console.log(user.pointStamp)
+        }
 
         // 이전 주문과 회원 간의 연결 끊음
         await Order.update({
@@ -174,7 +219,7 @@ router.post('/pay', async (req, res, next) => {
 
         // 새 주문 정보 추가
         const order = await Order.create({
-            totalPrice,
+            totalPrice: payPrice,
             creditCardNumber,
             creditCardExpiration,
             creditCardType,
@@ -184,12 +229,20 @@ router.post('/pay', async (req, res, next) => {
             orderDate: new Date(),
             ordered_user_id: req.user.id,
             user_id: req.user.id,
+            usePoint, // 적립금사용액 추가
             status: 'ready',
         });
 
         if (payWith == 'cart') {
             // 장바구니 결제
             for(let i = 0; i < bookNumbers.length; i++) {
+                const userPointStamp = await User.findOne({
+                    attributes: ['pointStamp'],
+                    where: {
+                        id: req.user.id,
+                    }
+                });
+
                 const book = await Book.findOne({
                     where: {
                         number: bookNumbers[i],
@@ -203,6 +256,18 @@ router.post('/pay', async (req, res, next) => {
                     book.save({ transaction });
 
                     order.addBook(book, { through: { quantity: quantity[i] } });
+
+
+                    // // 주문 완료 시 해당 주문 금액 만큼 적립금스탬프(pointStamp) 증가
+                    let pointStamp = parseInt(userPointStamp.pointStamp) + parseInt(quantity[i]);
+
+                    await User.update({
+                        pointStamp,
+                    }, {
+                        where: {
+                            id: req.user.id,
+                        }
+                    });
                 } else {
                     // 재고량이 없을 경우
                     cantOrderBook.push(book.title);
@@ -287,8 +352,26 @@ router.post('/pay', async (req, res, next) => {
             book.stock -= quantity;
             book.save();
 
-            order.addBook(book, { through: { quantity } } );
-            // res.redirect('/order/pay/done');
+            // order.addBook(book, { through: { quantity } } );
+
+            const userPointStamp = await User.findOne({
+                attributes: ['pointStamp'],
+                where: {
+                    id: req.user.id,
+                }
+            });
+
+            // 주문 완료 시 해당 주문 금액 만큼 적립금스탬프(pointStamp) 증가
+            let pointStamp = parseInt(userPointStamp.pointStamp) + parseInt(quantity);
+
+            await User.update({
+                pointStamp,
+            }, {
+                where: {
+                    id: req.user.id,
+                }
+            });
+
             res.redirect('/');
         } else {
             throw Error('결제 방법이 이상합니다.');
