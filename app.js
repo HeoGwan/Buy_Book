@@ -18,6 +18,7 @@ const authRouter = require('./routes/auth');
 const saveRouter = require('./routes/save');
 const infoRouter = require('./routes/info');
 const returnRouter = require('./routes/return');
+const pointRouter = require('./routes/point');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
@@ -65,6 +66,7 @@ app.use('/auth', authRouter);
 app.use('/save', saveRouter);
 app.use('/info', infoRouter);
 app.use('/return', returnRouter);
+app.use('/point', pointRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url}에 라우터가 없습니다.`);

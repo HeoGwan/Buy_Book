@@ -44,11 +44,14 @@ module.exports = class User extends Sequelize.Model {
 
         // shippingAddress와 1 : N 관계 (1측, 비식별)
         db.User.hasMany(db.ShippingAddress, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-
+        
         // cart과 1 : N 관계 (1측, 비식별)
         db.User.hasMany(db.Cart, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-
+        
         // order 1 : N 관계 (1측, 비식별)
         db.User.hasMany(db.Order, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'set null', onUpdate: 'cascade' });
+        
+        // point 1 : N 관계 (1측, 비식별)
+        db.User.hasMany(db.Point, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 }

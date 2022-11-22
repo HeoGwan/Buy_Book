@@ -3,35 +3,34 @@ const Sequelize = require('sequelize');
 module.exports = class Point extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            id: {
-                type: Sequelize.STRING(20),
+            number: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
                 primaryKey: true,
+                autoIncrement: true,
             },
-            password: {
+            date: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
+            content: {
                 type: Sequelize.STRING,
-                allowNull: false,
+                allowNull: true,
             },
-            name: {
-                type: Sequelize.STRING(10),
-                allowNull: false,
-            },
-            point: {
+            price: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0,
+                allowNull: true,
             },
-            pointStamp: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0,
-            },
+            had_user_id: {
+                type: Sequelize.STRING(20),
+                allowNull: true,
+            }
         }, {
             sequelize,
             timestamps: false,
             underscored: false,
-            modelName: 'User',
-            tablename: 'user',
+            modelName: 'Point',
+            tablename: 'point',
             paranoid: false,
             charset: 'utf8',
             collate: 'utf8_general_ci',
@@ -40,15 +39,6 @@ module.exports = class Point extends Sequelize.Model {
 
     static associate(db) {
         // creditCard와 1 : N 관계 (1측, 비식별)
-        db.User.hasMany(db.CreditCard, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-
-        // shippingAddress와 1 : N 관계 (1측, 비식별)
-        db.User.hasMany(db.ShippingAddress, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-
-        // cart과 1 : N 관계 (1측, 비식별)
-        db.User.hasMany(db.Cart, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-
-        // order 1 : N 관계 (1측, 비식별)
-        db.User.hasMany(db.Order, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'set null', onUpdate: 'cascade' });
+        db.Point.belongsTo(db.User, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade', unique: true, });
     }
 }

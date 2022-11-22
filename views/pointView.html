@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div id="point">
+        <h1>적립금</h1>
+        <table id="cart-item">
+            <tr>
+                <th>적립 날짜</th>
+                <th>적립 내용</th>
+                <th>적립/사용 금액</th>
+            </tr>
+            {% for point in points %}
+                <tr>
+                    <td>
+                        <span>{{point.date}}</span>
+                    </td>
+                    <td>
+                        <span>{{point.content}}</span>
+                    </td>
+                    <td>
+                        {% if point.price < 0 %}
+                            <span>{{point.price}}</span>
+                        {% else %}
+                            <span>+{{point.price}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

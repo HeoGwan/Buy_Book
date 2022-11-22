@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const User = require('../models/user');
 const Cart = require('../models/cart');
-const { sequelize } = require('../models');
+const { sequelize, Point } = require('../models');
 
 const router = express.Router();
 
@@ -21,12 +21,19 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
             id,
             password: hash,
             name,
-            point: 10000,
+            point: 5000,
         });
         await Cart.create({
             user_id: id,
             had_user_id: id,
             createDate: new Date(),
+        });
+        await Point.create({
+            date: new Date(),
+            content: '신규가입',
+            price: 5000,
+            had_user_id: id,
+            user_id: id,
         });
         
         return res.redirect('/');
