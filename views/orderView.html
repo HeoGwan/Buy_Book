@@ -134,11 +134,32 @@
                 </div>
             </form>
         </div>
+        <div>
+            <button onclick="inputInfo()">결제 입력</button>
+        </div>
     </div>
 {% endblock %}
 
 {% block script %}
     <script>
+        function inputInfo() {
+            // 배송지 정보
+            document.getElementsByClassName('zip-code')[0].value = '12345';
+            document.getElementsByClassName('basic-address')[0].value = '12345';
+            document.getElementsByClassName('detail-address')[0].value = '12345';
+
+            // 신용카드 정보
+            // 카드 번호
+            document.getElementsByClassName('credit-card')[0].value = '1234';
+            document.getElementsByClassName('credit-card')[1].value = '1234';
+            document.getElementsByClassName('credit-card')[2].value = '1234';
+            document.getElementsByClassName('credit-card')[3].value = '1234';
+
+            // 유효 기간
+            document.getElementsByClassName('credit-card')[4].value = '12'; // MM
+            document.getElementsByClassName('credit-card')[5].value = '12'; // yy
+        }
+
         function getTotalPrice() {
             const totalPrices = document.querySelectorAll('.book-total-price');
             let total = 0;
